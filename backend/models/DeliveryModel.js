@@ -1,0 +1,51 @@
+import { Sequelize } from "sequelize";
+import db from "../config/Database.js";
+import DeliveryHistories from "./DeliveryHistoryModel.js";
+
+const {DataTypes} = Sequelize;
+
+const Deliveries = db.define('deliveries', {
+    uuid: {
+        type: DataTypes.STRING,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
+    },
+    delivery_date: {
+        type: DataTypes.DATEONLY, 
+        allowNull: false
+    },
+    delivery_time: {
+        type: DataTypes.TIME, 
+        allowNull: false
+    },
+    status: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+        defaultValue: 'Pending',
+    },
+    title: {
+        type: DataTypes.STRING(200),
+        allowNull: true
+    },
+    product_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    },
+    supplier_id: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+    }
+}, {
+    freezeTableName: true,
+});
+DeliveryHistories.belongsTo(Deliveries, {
+    foreignKey: 'delivery_id',
+});
+
+Deliveries.hasMany(DeliveryHistories, {
+    foreignKey: 'delivery_id'
+});
+export default Deliveries;

@@ -65,6 +65,27 @@ const MyStyledCalendar = () => {
       end: new Date(2025, 6, 26, 15, 30),
       type: "sports"
     },
+      {
+      id: 7,
+      title: "Comer",
+      start: new Date(2025, 6, 26, 13, 30),
+      end: new Date(2025, 6, 26, 15, 30),
+      type: "sports"
+    },
+     {
+      id: 7,
+      title: "Comer",
+      start: new Date(2025, 6, 26, 13, 30),
+      end: new Date(2025, 6, 26, 15, 30),
+      type: "sports"
+    },
+     {
+      id: 7,
+      title: "Comer",
+      start: new Date(2025, 6, 26, 13, 30),
+      end: new Date(2025, 6, 26, 15, 30),
+      type: "sports"
+    },
   ]);
   /**
    * ELIMINAR EVENTO DE LA PARTE DERECHA DONDE DICE PROXIMOS EVENTOS
