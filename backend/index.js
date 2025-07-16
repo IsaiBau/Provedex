@@ -6,13 +6,20 @@ import db from "./config/Database.js";
 // import UserRoute from "./routes/UserRoute.js"
 // import ProductRoute from "./routes/ProductRoute.js"
 import TestRoute from "./routes/TestRoute.js"
-
+//MODELOS DE LA BD
+import Categories from "./models/CategoryModel.js";
+import DeliveryHistories from "./models/DeliveryHistoryModel.js";
+import Deliveries from "./models/DeliveryModel.js";
+import Products from "./models/ProductModel.js";
+import ProductSupplier from "./models/ProductSupplierModel.js"
+import Suppliers from "./models/SupplierModel.js";
+import Users from "./models/UserModel.js";
 dotenv.config();
 
 const app = express();
 
 (async()=>{
-    await db.sync()
+    await db.sync()// colocar entre los parentesis {force:true} en caso de querer rehacer la bd, se eliminaran todos los datos
 })();
 
 app.use(session({
