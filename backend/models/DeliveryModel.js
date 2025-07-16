@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize";
 import db from "../config/Database.js";
 import DeliveryHistories from "./DeliveryHistoryModel.js";
+import Products from "./ProductModel.js";
+import Suppliers from "./SupplierModel.js";
 
 const {DataTypes} = Sequelize;
 
@@ -47,5 +49,21 @@ DeliveryHistories.belongsTo(Deliveries, {
 
 Deliveries.hasMany(DeliveryHistories, {
     foreignKey: 'delivery_id'
+});
+
+Deliveries.belongsTo(Products, {
+    foreignKey: 'product_id',
+});
+
+Products.hasMany(Deliveries, {
+    foreignKey: 'product_id',
+});
+
+Deliveries.belongsTo(Suppliers, {
+    foreignKey: 'supplier_id',
+});
+
+Suppliers.hasMany(Deliveries, {
+    foreignKey: 'supplier_id',
 });
 export default Deliveries;
