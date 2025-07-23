@@ -19,7 +19,7 @@ dotenv.config();
 const app = express();
 
 (async()=>{
-    await db.sync({force:true})// colocar entre los parentesis {force:true} en caso de querer rehacer la bd, se eliminaran todos los datos
+    await db.sync()// colocar entre los parentesis {force:true} en caso de querer rehacer la bd, se eliminaran todos los datos
 })();
 
 app.use(session({
