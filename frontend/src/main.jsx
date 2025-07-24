@@ -1,3 +1,4 @@
+
 import axios from 'axios';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
@@ -7,6 +8,7 @@ import App from './App';
 import { store } from './app/store';
 import './index.css';
 import ScrollToTop from './features/ScrollToTop';
+import Dashboard from './Dashboard.jsx'
 axios.defaults.withCredentials = true;
 
 const container = document.getElementById('root');
@@ -18,6 +20,7 @@ root.render(
     <BrowserRouter>
       <ScrollToTop/>
       <App/>
+      <Dashboard />
     </BrowserRouter>
     </Provider>
   </React.StrictMode>
