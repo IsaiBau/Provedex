@@ -179,7 +179,7 @@ const transformDeliveriesToEvents = (deliveries) => {
               onClick={() => setCurrentDate(new Date(currentDate.getFullYear(), i, 1))}
               className={`py-2.5 cursor-pointer transition-all duration-200 ${
                 currentDate.getMonth() === i ? 'font-bold' : 'font-normal'
-              } hover:bg-blue-900 hover:bg-opacity-10`}
+              } hover:text-blue-200 hover:bg-opacity-10`}
             >
               {moment().month(i).format("MMMM")}
             </li>
