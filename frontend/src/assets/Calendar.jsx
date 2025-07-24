@@ -257,11 +257,11 @@ const transformDeliveriesToEvents = (deliveries) => {
                 </div>
                 
                 <div className="mb-2">
-                  <strong>Producto:</strong> {event.deliveryData.product_name}
+                  <strong>Producto:</strong> {event.deliveryData.product?.name || 'No especificado'}s
                 </div>
                 
                 <div className="mb-3">
-                  <strong>Proveedor:</strong> {event.deliveryData.supplier_name}
+                  <strong>Producto:</strong> {event.deliveryData.supplier?.name || 'No especificado'}
                 </div>
                 
                 <button
