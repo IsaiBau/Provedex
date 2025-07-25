@@ -264,12 +264,20 @@ const transformDeliveriesToEvents = (deliveries) => {
                   <strong>Producto:</strong> {event.deliveryData.supplier?.name || 'No especificado'}
                 </div>
                 
-                <button
-                  onClick={() => handleDeleteEvent(event.id)}
-                  className="bg-transparent border border-red-500 text-red-500 py-1 px-3 rounded text-sm cursor-pointer transition-all duration-200 hover:bg-red-500 hover:text-white"
-                >
-                  No mostrar
-                </button>
+                <div className="flex justify-between space-x-2">
+                  <button
+                    onClick={() => handleDeleteEvent(event.id)}
+                    className="flex-1 bg-transparent border border-red-500 text-red-500 py-1 px-3 rounded text-sm 
+                    cursor-pointer transition-all duration-200 hover:bg-red-500 hover:text-white
+                    whitespace-nowrap"
+                  >No mostrar</button>
+                  <button
+                    onClick={() => handleEditStatus(event.id)}
+                    className="flex-1 bg-transparent border border-yellow-500 text-yellow-600 py-1 px-3 rounded text-sm 
+                    cursor-pointer transition-all duration-200 hover:bg-yellow-500 hover:text-white
+                    whitespace-nowrap"
+                  >Editar estado</button>
+                </div>
               </div>
             ))
         )}
