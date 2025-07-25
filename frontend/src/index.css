@@ -1,3 +1,120 @@
-
 @import "tailwindcss";
 
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  display: none;
+  -webkit-appearance: none;
+}
+input[type="date"],
+input[type="time"] {
+  appearance: none;
+  -moz-appearance: textfield;
+}
+
+.poppins-regular {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.poppins-semibold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.poppins-bold {
+  font-family: "Poppins", sans-serif;
+  font-weight: 700;
+  font-style: normal;
+  font-size: 32pt;
+    color: #AC8DB4;
+}
+
+.label{
+    font-family: 'Poppins', sans-serif;
+     font-weight: 400;
+    color: #7F7486;
+}
+
+.cardHeader{
+    margin-bottom: 20px;
+}
+
+
+.input{
+    position: relative;
+    display: inline-block;
+    justify-content: space-between;
+    padding-right: 2.5rem;
+    outline: none;
+    height: 44px;
+    width: 307px;
+    padding: 12px;
+    border-color: #AC8DB4;
+    border-width: 1px;
+    border-radius: 4px;
+    color: #AC8DB4;
+}
+
+.inputSelect{
+    position: relative;
+    display: inline-block;
+    justify-content: space-between;
+    padding-right: 2.5rem;
+    outline: none;
+    height: 44px;
+    width: 307px;
+    padding: 12px;
+    border-color: #AC8DB4;
+    border-width: 1px;
+    border-radius: 4px;
+    color: #AC8DB4;
+}
+
+  .input .icon {
+    color: #AC8DB4;
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #555;
+  }
+
+
+.input-icon-wrapper {
+    color: #AC8DB4;
+    position: relative;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .input-icon-wrapper input {
+    padding-right: 2.5rem;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .input-icon-wrapper svg {
+    position: absolute;
+    right: 85px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 20px;
+    height: 20px;
+    pointer-events: none;
+  }
+
+
+.button{
+    display: flex;
+    height: 44px;
+    width: 307px;
+    margin-top: 25px;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    border-radius: 4px;
+    background: linear-gradient(#FF962C, #E2D17B);
+}

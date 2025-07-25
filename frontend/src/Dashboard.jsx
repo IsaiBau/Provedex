@@ -1,8 +1,8 @@
-import { useState } from "react";
 import "./Dashboard.css";
 import User from "/Person-1.jpg";
-
-function Dashboard() {
+import { NavLink } from "react-router-dom"
+ 
+const Dashboard = ({title, children}) => {
   return (
     <div className="dashboard">
       {/* Barra superior */}
@@ -32,9 +32,9 @@ function Dashboard() {
         <aside className="sidebar">
           <nav>
             <ul className="menu">
-              <li className="menu-item">Productos</li>
-              <li className="menu-item">Proveedores</li>
-              <li className="menu-item">Entregas</li>
+              <li className="menu-item"><NavLink to={"/productos"}>Productos</NavLink></li>
+              <li className="menu-item"><NavLink to={"/proveedores"}>Proveedores</NavLink></li>
+              <li className="menu-item"><NavLink to={"/entregas"}>Entregas</NavLink></li>
             </ul>
           </nav>
         </aside>
@@ -44,8 +44,12 @@ function Dashboard() {
           {/* Tarjeta de calendario */}
           <div className="card">
             <div className="card-header">
-              <h2>Productos</h2>
+              <h2>{title}</h2>
             </div>
+            <div className="flex justify-center w-full">
+              {children}
+            </div>
+              
           </div>
         </main>
       </div>
