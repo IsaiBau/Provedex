@@ -21,7 +21,6 @@ root.render(
     <BrowserRouter>
       <ScrollToTop/>
       <App/>
-      <Dashboard />
     </BrowserRouter>
     </Provider>
   </React.StrictMode>
