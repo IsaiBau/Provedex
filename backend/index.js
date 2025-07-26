@@ -6,7 +6,6 @@ import db from "./config/Database.js";
 // import UserRoute from "./routes/UserRoute.js"
 import ProductRoute from "./routes/ProductRoute.js"
 import SupplierRoute from "./routes/SupplierRoute.js"
-// import ProductRoute from "./routes/ProductRoute.js"
 import DeliveryRoute from "./routes/DeliveryRoute.js";
 import TestRoute from "./routes/TestRoute.js"
 //MODELOS DE LA BD
@@ -17,7 +16,7 @@ import Products from "./models/ProductModel.js";
 import ProductSupplier from "./models/ProductSupplierModel.js"
 import Suppliers from "./models/SupplierModel.js";
 import Users from "./models/UserModel.js";
-import DeliveryRoute from "./routes/DeliveryRoute.js";
+
 dotenv.config();
 
 const app = express();
