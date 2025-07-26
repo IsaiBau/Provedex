@@ -48,18 +48,90 @@ export const getDeliveries = async (req, res) => {
     }
 };
 
-export const getDeliveryById = (req, res) =>{
-    
+export const getDeliveryById = async(req, res) =>{
+    try {
+        const delivery = await Delivery.findOne({
+            where:{
+                uuid: req.params.uuid
+            }
+        })
+        if(!delivery) return res.status(404).json({msg: "No se encontró la entrega"})
+        const respose = await Delivery.findOne({
+                attributes:['uuid','delivery_date', 'delivery_time','status', 'title', 'product_id', 'supplier_id'],
+                where:{
+                    uuid: delivery.uuid
+                }, 
+                include: [
+                    {
+                        model: Product,
+                        attributes: ['id','uuid', 'name'],
+                        as: 'product' // Usa el mismo alias que en tu relación
+                    },
+                    {
+                        model: Supplier,
+                        attributes: ['id','uuid', 'name'],
+                        as: 'supplier' // Usa el mismo alias que en tu relación
+                    }
+                ],
+            })
+        res.status(200).json(respose)
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
 }
 
-export const createDelivery = (req, res) =>{
-    
+export const createDelivery = async(req, res) => {
+    const {delivery_date, delivery_time, status, title, product_id, supplier_id} = req.body;
+    try {
+        await Delivery.create({
+            delivery_date: delivery_date,
+            delivery_time: delivery_time,
+            status:status,
+            title:title,
+            product_id:product_id,
+            supplier_id:supplier_id
+        });
+        res.status(200).json({msg: "Entrega agregada"})
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }
 }
 
-export const updateDelivery = (req, res) =>{
-    
+export const updateDelivery = async(req, res) =>{
+    try {
+        const delivery = await Delivery.findOne({
+            where: {
+                uuid: req.params.uuid
+            }
+        });
+        const {delivery_date, delivery_time, status, title, product_id, supplier_id} = req.body;
+        if(!delivery) return res.status(404).json({msg: "No se encotro la entrega"})
+        await Delivery.update({delivery_date, delivery_time, status, title, product_id, supplier_id},{
+            where:{
+                uuid: delivery.uuid
+            }
+        })
+
+        res.status(200).json({ msg: "Entrega actualizada" });
+    } catch (error) {
+        console.log(res)
+        res.status(500).json({ msg: error.message });
+    }
 }
 
-export const deleteDelivery = (req, res) =>{
-    
-}
+export const deleteDelivery = async(req, res) =>{
+    try {
+        const delivery = await Delivery.findOne({
+            where:{
+                uuid: req.params.uuid
+            }
+        })
+        await Delivery.destroy({
+            where:{
+                uuid: delivery.uuid
+            }
+        })
+        res.status(200).json({msg: "Entrega eliminada con exito!"})
+    } catch (error) {
+        res.status(500).json({msg: error.message})
+    }

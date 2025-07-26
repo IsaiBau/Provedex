@@ -1,0 +1,16 @@
+PATCH http://localhost:5000/deliveries/ee88b3ae-5d5e-441e-b460-2b330b64f6aa
+Content-Type: application/json
+
+{
+    "delivery_date":"2025-07-29",
+    "delivery_time":"13:00:00",
+    "status":"Canceled",
+    "title":"test",
+    "product_id":1,
+    "supplier_id":5
+}
+/*1970-01-01T13:00:00.000Z
+GET http://localhost:5000/deliveries/ee88b3ae-5d5e-441e-b460-2b330b64f6aa
+
+DELETE http://localhost:5000/deliveries/f1af3a0e-e2a7-435d-89c5-a4d7924153dc
+Content-Type: application/json*/

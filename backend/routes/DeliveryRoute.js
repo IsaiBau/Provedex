@@ -10,9 +10,9 @@ import{
 const router = express.Router();
 
 router.get('/deliveries', getDeliveries)
-router.get('/deliveries/:id', getDeliveryById)
+router.get('/deliveries/:uuid', getDeliveryById)
 router.post('/deliveries', createDelivery)
-router.patch('/deliveries/:id', updateDelivery)
-router.delete('/deliveries/:id', deleteDelivery)
+router.put('/deliveries/:uuid', updateDelivery)
+router.delete('/deliveries/:uuid', deleteDelivery)
 
 export default router;
