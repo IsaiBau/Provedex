@@ -45,10 +45,12 @@ const Deliveries = db.define('deliveries', {
 });
 DeliveryHistories.belongsTo(Deliveries, {
     foreignKey: 'delivery_id',
+    onDelete: 'CASCADE'
 });
 
 Deliveries.hasMany(DeliveryHistories, {
-    foreignKey: 'delivery_id'
+    foreignKey: 'delivery_id',
+    onDelete: 'CASCADE'
 });
 
 Deliveries.belongsTo(Products, {

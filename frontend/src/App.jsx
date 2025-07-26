@@ -8,6 +8,7 @@ function App() {
     <div>
         <Routes>
           <Route path="/entregas" element={<Entregas/>}/>
+          <Route path="/entregas/:uuid" element={<Entregas/>}/>
           <Route path="/delivery" element={<DeliveryTable/>}/>
         </Routes>
 

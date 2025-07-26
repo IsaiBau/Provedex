@@ -34,7 +34,7 @@ const Dashboard = ({title, children}) => {
             <ul className="menu">
               <li className="menu-item"><NavLink to={"/productos"}>Productos</NavLink></li>
               <li className="menu-item"><NavLink to={"/proveedores"}>Proveedores</NavLink></li>
-              <li className="menu-item"><NavLink to={"/entregas"}>Entregas</NavLink></li>
+              <li className="menu-item"><NavLink to={"/delivery"}>Entregas</NavLink></li>
             </ul>
           </nav>
         </aside>

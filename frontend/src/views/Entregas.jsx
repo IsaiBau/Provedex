@@ -1,213 +1,324 @@
 import React, { useState, useEffect } from "react";
-import { Layout } from "../components/Layout";
+import { useParams, useNavigate } from "react-router-dom";
 import Dashboard from "../Dashboard";
 import axios from "axios";
-export default function Entregas ()  {
-  /*Manejo de estados */
+
+export default function Entregas() {
+  const { uuid } = useParams(); 
+  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
   const [msg, setMsg] = useState("");
-  const [editar, setEditar] = useState(false);
-  const [deliveriesSelect, setDeliveriesSelect] = useState([]);
-  /*Variables del formulario */
-  const [deliveryDate, setDeliveryDate] = useState("");
-  const [deliveryTime, setDeliveryTime] = useState("");
-  const [status, setStatus] = useState([]);
-  const [title, setTitle] = useState(null);
-  const [idProduct, setIdProduct] = useState(null);
-  const [products, setProducts] = useState("");
-  const [productsSelect, setProductsSelect] = useState("");
-  const [idSupplier, setIdSupplier] = useState(null);
-  const [suppliers, setSuppliers] = useState("");
-  const [suppliersSelect, setSuppliersSelect] = useState([]);
   
-  /*Funciones para obtener datos para los select */
+  // Estados para los datos del formulario
+  const [formData, setFormData] = useState({
+    delivery_date: "",
+    delivery_time: "",
+    status: "",
+    title: "",
+    product_id: "",
+    supplier_id: ""
+  });
+  
+  // Estados para las listas de opciones
+  const [productsList, setProductsList] = useState([]);
+  const [suppliersList, setSuppliersList] = useState([]);
+  
+  // Estados para los valores mostrados en los inputs de datalist
+  const [productDisplay, setProductDisplay] = useState("");
+  const [supplierDisplay, setSupplierDisplay] = useState("");
+
+  // Validaciones
+  const [errors, setErrors] = useState({
+    delivery_date: false,
+    delivery_time: false,
+    status: false,
+    product_id: false,
+    supplier_id: false
+  });
+
+  // Cargar datos iniciales
   useEffect(() => {
-    getProducts();
-    getSuppliers();
-    getDeliveries();
-  }, []);
-  const getDeliveries = async () => {
-      const response = await axios.get("http://localhost:5000/deliveries");
-      setDeliveriesSelect(response.data);
-  };
-  const getProducts = async () => {
-      const response = await axios.get("http://localhost:5000/products");
-      setProductsSelect(response.data);
-  };
-  const getSuppliers = async () => {
-      const response = await axios.get("http://localhost:5000/suppliers");
-      setSuppliersSelect(response.data);
-  };
-  /*Funcion para agregar */
-  const addDelivery = async () => {
-    await axios
-      .post(`http://localhost:5000/deliveries`, { 
-        delivery_date: deliveryDate,
-        delivery_time: deliveryTime,
-        status: status,
-        title: title,
-        product_id: idProduct,
-        supplier_id: idSupplier })
-      .then(() => {
-        resetForm();
-        setMsg("Entrega registrada con éxito");
-      })
-      .catch((error) => {
-        setMsg(error.response.data.msg);
-      });
+    const fetchInitialData = async () => {
+      try {
+        // Cargar productos y proveedores
+        const [productsRes, suppliersRes] = await Promise.all([
+          axios.get("http://localhost:5000/products"),
+          axios.get("http://localhost:5000/suppliers")
+        ]);
+        
+        setProductsList(productsRes.data || []);
+        setSuppliersList(suppliersRes.data || []);
+
+        // Si hay UUID, cargar los datos de la entrega a editar
+        if (uuid) {
+          const deliveryRes = await axios.get(`http://localhost:5000/deliveries/${uuid}`);
+          const deliveryData = deliveryRes.data;
+          
+          setFormData({
+            delivery_date: deliveryData.delivery_date,
+            delivery_time: deliveryData.delivery_time.split('T')[1].substring(0, 5),
+            status: deliveryData.status,
+            title: deliveryData.title || "",
+            product_id: deliveryData.product_id,
+            supplier_id: deliveryData.supplier_id
+          });
+          
+          // Establecer los valores mostrados en los inputs
+          const product = productsRes.data.find(p => p.id === deliveryData.product_id);
+          const supplier = suppliersRes.data.find(s => s.id === deliveryData.supplier_id);
+          
+          setProductDisplay(product?.name || "");
+          setSupplierDisplay(supplier?.name || "");
+          
+          setIsEditing(true);
+        }
+      } catch (error) {
+        setMsg(error.response?.data?.msg || "Error al cargar datos");
+      }
+    };
+
+    fetchInitialData();
+  }, [uuid]);
+
+  // Validar formulario
+  const validateForm = () => {
+    const newErrors = {
+      delivery_date: !formData.delivery_date,
+      delivery_time: !formData.delivery_time,
+      status: !formData.status,
+      product_id: !formData.product_id,
+      supplier_id: !formData.supplier_id
+    };
+    
+    setErrors(newErrors);
+    
+    // Verificar si hay algún error
+    return !Object.values(newErrors).some(error => error);
   };
 
-  /*Funciones para editar */
-
-  /*Funcion para eliminar */
-    const deleteDeliverie = (id) => {
-    axios
-      .delete(`http://localhost:5000/deliveries/${id}`)
-      .then(() => {
-        getDeliveries();
-        resetForm();
-      })
-      .catch((error) => {
-        setMsg(error.response.data.msg);
-      });
-  };
-  /*Funciones para el formulario */
-  const resetForm = () => {
-    setDeliveryDate("");
-    setDeliveryTime("");
-    setStatus("");
-    setTitle("");
-    setProducts("");
-    setIdProduct(null);
-    setSuppliers("");
-    setIdSupplier(null);
-  };
-
+  // Manejar cambios en los inputs normales
   const handleChange = (e) => {
     const { name, value } = e.target;
-    switch (name) {
-      case "delivery_date":
-        setDeliveryDate(value);
-        break;
-      case "delivery_time":
-        setDeliveryTime(value);
-        break;
-      case "status":
-        setStatus(value);
-        break;
-      case "title":
-        setTitle(value);
-        break;
-      default:
-        break;
-    }
-    /*Validaciones */
-    switch (name) {
-      case "delivery_date":
-        if (value.length < 1) {
-          setMsg("Debe seleccionar una fecha.");
-        }
-        break;
-      case "delivery_time":
-        if (value.length < 1) {
-          setMsg("Debe seleccionar una hora.");
-        }
-        break;
-      case "status":
-        if (value.length < 1) {
-          setMsg("Debe seleccionar un estado.");
-        }
-        break;
-      case "product_id":
-        if (value.length < 1) {
-          setMsg("Debe seleccionar un producto.");
-        }
-        break;
-      case "supplier_id":
-        if (value.length < 1) {
-          setMsg("Debe seleccionar un proveedor.");
-        }
-        break;
-      default:
-        break;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    // Limpiar error al cambiar
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: false }));
     }
   };
-  const handleInputChangeProducts = (e) => {
-    const productInput = e.target.value;
-    setProducts(productInput);
+
+  // Manejar cambios en los inputs de producto
+  const handleProductChange = (e) => {
+    const value = e.target.value;
+    setProductDisplay(value);
     
-    if (productInput === "") {
-        setMsg(""); 
-        setIdProduct("");
+    // Buscar el producto seleccionado
+    const selectedProduct = productsList.find(item => item.name === value);
+    
+    if (selectedProduct) {
+      setFormData(prev => ({ ...prev, product_id: selectedProduct.id }));
+      setErrors(prev => ({ ...prev, product_id: false }));
     } else {
-        const selectedProduct = productsSelect.find(
-        (productslist) => `${productslist.name}` === productInput
-        );
-    
-        if (selectedProduct) {
-          setIdProduct(selectedProduct.id);
-          setMsg(""); 
-        } else {
-          setMsg("Ingrese un producto de la lista");
-          setIdProduct("");
-        }
+      setFormData(prev => ({ ...prev, product_id: "" }));
+      setErrors(prev => ({ ...prev, product_id: true }));
     }
-  };  
-  const handleInputChangeSupplier = (e) => {
-    const supplierInput = e.target.value;
-    setSuppliers(supplierInput);
+  };
+
+  // Manejar cambios en los inputs de proveedor
+  const handleSupplierChange = (e) => {
+    const value = e.target.value;
+    setSupplierDisplay(value);
     
-    if (supplierInput === "") {
-        setMsg(""); 
-        setIdSupplier("");
+    // Buscar el proveedor seleccionado
+    const selectedSupplier = suppliersList.find(item => item.name === value);
+    
+    if (selectedSupplier) {
+      setFormData(prev => ({ ...prev, supplier_id: selectedSupplier.id }));
+      setErrors(prev => ({ ...prev, supplier_id: false }));
     } else {
-        const selectedSupplier = suppliersSelect.find(
-        (supplierlist) => `${supplierlist.name}` === supplierInput
-        );
-    
-        if (selectedSupplier) {
-          setIdSupplier(selectedSupplier.id);
-          setMsg(""); 
-        } else {
-          setMsg("Ingrese un proveedor de la lista");
-          setIdSupplier("");
-        }
+      setFormData(prev => ({ ...prev, supplier_id: "" }));
+      setErrors(prev => ({ ...prev, supplier_id: true }));
     }
-  };  
+  };
+
+  // Enviar formulario (crear o actualizar)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    // Validar antes de enviar
+    if (!validateForm()) {
+      setMsg("Por favor complete todos los campos requeridos");
+      return;
+    }
+    
+    try {
+      if (isEditing) {
+        await axios.put(`http://localhost:5000/deliveries/${uuid}`, formData);
+        setMsg("Entrega actualizada con éxito");
+      } else {
+        await axios.post("http://localhost:5000/deliveries", formData);
+        setMsg("Entrega creada con éxito");
+        resetForm();
+      }
+      
+      // Redirigir después de 2 segundos
+      setTimeout(() => navigate("/delivery"), 2000);
+    } catch (error) {
+      setMsg(error.response?.data?.msg || "Error al procesar la solicitud");
+    }
+  };
+
+  // Resetear formulario
+  const resetForm = () => {
+    setFormData({
+      delivery_date: "",
+      delivery_time: "",
+      status: "",
+      title: "",
+      product_id: "",
+      supplier_id: ""
+    });
+    setProductDisplay("");
+    setSupplierDisplay("");
+    setErrors({
+      delivery_date: false,
+      delivery_time: false,
+      status: false,
+      product_id: false,
+      supplier_id: false
+    });
+  };
+
   return (
-    <Dashboard title={"Entregas"}>
-        <form className="max-w-sm mx-auto flex flex-col gap-5">
+    <Dashboard title={isEditing ? "Editar Entrega" : "Nueva Entrega"}>
+      <form onSubmit={handleSubmit} className="max-w-sm mx-auto flex flex-col gap-5">
+        {/* Fecha de entrega */}
         <div className="mb-5"> 
-            <label for="fecha" className="label">Fecha de entrega*</label>
-            <div class="input-icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
-                </svg>
-                <input value={deliveryDate || ""} onChange={handleChange} name="delivery_date" id="delivery_date" type="date" className="input" required />
-            </div>   
+          
+          <label htmlFor="delivery_date" className="label">Fecha de entrega*</label>
+          
+          <div className={`input-icon-wrapper ${errors.delivery_date ? 'border-red-500' : ''}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+            </svg>
+            <input 
+              value={formData.delivery_date} 
+              onChange={handleChange} 
+              name="delivery_date" 
+              id="delivery_date" 
+              type="date" 
+              className="input" 
+              required 
+            />
+          </div>
+          {errors.delivery_date && <p className="text-red-500 text-xs mt-1">Este campo es requerido</p>}
         </div>
+
+        {/* Hora de entrega */}
         <div className="mb-5">
-            <label for="hora" className="label">Hora de entrega*</label>
-            <div class="input-icon-wrapper">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                </svg>
-                <input type="time" value={deliveryTime || ""} onChange={handleChange} name="delivery_time" id="delivery_time" className="input" required />
-            </div>   
+          <label htmlFor="delivery_time" className="label">Hora de entrega*</label>
+          <div className={`input-icon-wrapper ${errors.delivery_time ? 'border-red-500' : ''}`}>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+            </svg>
+            <input 
+              type="time" 
+              value={formData.delivery_time} 
+              onChange={handleChange} 
+              name="delivery_time" 
+              id="delivery_time" 
+              className="input" 
+              required 
+            />
+          </div>
+          {errors.delivery_time && <p className="text-red-500 text-xs mt-1">Este campo es requerido</p>}
         </div>
+
+        {/* Estado */}
         <div className="mb-5">
-            <label for="estado" className="label ">Estado de la entrega*</label>
-            <div class="input-icon-wrapper">
-                <select value={status || ""} onChange={handleChange} name="status" id="status" className="inputSelect" multiple={false}>
-                    <option value="" disabled>Seleccionar</option>
-                    <option value="Completed">Completado</option>
-                    <option value="Pending">Pendiente</option>
-                    <option value="Rescheduled">Reagendado</option>
-                    <option value="Canceled">Cancelado</option>
-                    <option value="Other">Otro</option>
-                </select>
-            </div>  
+          <label htmlFor="status" className="label">Estado de la entrega*</label>
+          <div className={`input-icon-wrapper ${errors.status ? 'border-red-500' : ''}`}>
+            <select 
+              value={formData.status} 
+              onChange={handleChange} 
+              name="status" 
+              id="status" 
+              className="inputSelect" 
+              required
+            >
+              <option value="" disabled>Seleccionar</option>
+              <option value="Completed">Completado</option>
+              <option value="Pending">Pendiente</option>
+              <option value="Rescheduled">Reagendado</option>
+              <option value="Canceled">Cancelado</option>
+              <option value="Other">Otro</option>
+            </select>
+          </div>
+          {errors.status && <p className="text-red-500 text-xs mt-1">Este campo es requerido</p>}
         </div>
-        {/* 
+
+        {/* Producto */}
+        <div className="mb-5">
+          <label htmlFor="product" className="label">Producto*</label>
+          <input
+            value={productDisplay}
+            onChange={handleProductChange}
+            id="product"
+            type="text"
+            autoComplete="off"
+            className={`inputSelect ${errors.product_id ? 'border-red-500' : ''}`}
+            placeholder="Seleccione un producto"
+            list="productsList"
+            required
+          />
+          <datalist id="productsList">
+            {productsList.map((product) => (
+              <option key={product.id} value={product.name}>
+                {product.name}
+              </option>
+            ))}
+          </datalist>
+          {errors.product_id && <p className="text-red-500 text-xs mt-1">Seleccione un producto válido</p>}
+        </div>
+
+        {/* Proveedor */}
+        <div className="mb-5">
+          <label htmlFor="supplier" className="label">Proveedor*</label>
+          <input
+            value={supplierDisplay}
+            onChange={handleSupplierChange}
+            id="supplier"
+            type="text"
+            autoComplete="off"
+            className={`inputSelect ${errors.supplier_id ? 'border-red-500' : ''}`}
+            placeholder="Seleccione un proveedor"
+            list="suppliersList"
+            required
+          /> 
+          <datalist id="suppliersList">
+            {suppliersList.map((supplier) => (
+              <option key={supplier.id} value={supplier.name}>
+                {supplier.name}
+              </option>
+            ))}
+          </datalist>
+          {errors.supplier_id && <p className="text-red-500 text-xs mt-1">Seleccione un proveedor válido</p>}
+        </div>
+
+      {/* Mensaje de estado */}
+      {msg && (
+        <div className="mb-5 -mx-4">
+          <p
+            className={`mx-4 p-2 text-sm rounded-sm ${
+              msg.includes("éxito") ? 'text-green-800 bg-green-200' : 'text-red-800 bg-red-200'
+            }`}
+            role="alert"
+          >
+            {msg}
+          </p>
+        </div>
+      )}
+      {/* 
         <div className="mb-5">
             <label for="productoTitulo" className="label">Titulo de la entrega</label>
             <div class="input-icon-wrapper">
@@ -218,67 +329,13 @@ export default function Entregas ()  {
             </div>  
         </div>
         */}
-        <div className="mb-5">
-          <label for="products" className="label">Producto*</label>
-          <input
-            value={products || ""}
-            onChange={handleInputChangeProducts}
-            id="id_products"
-            type="text"
-            autoComplete="on"
-            className="inputSelect"
-            placeholder="Productos"
-            list="productsList"
-            required
-          />
-          <datalist  id="productsList">
-            {productsSelect.length === 0 ? (
-              <option>No hay productos</option>) : (
-              productsSelect.map((val, key) => (
-                <option key={key} value={val.name}>
-                  {val.name}
-                </option>
-              ))
-            )}
-          </datalist>
+        {/* Botón de enviar */}
+        <div className="mt-4">
+          <button type="submit" className="button w-full">
+            {isEditing ? "Actualizar Entrega" : "Registrar Entrega"}
+          </button>
         </div>
-        <div className="mb-5">
-            <label for="proveedor" className="label">Proveedor*</label>
-            <input
-              value={suppliers || ""}
-              onChange={handleInputChangeSupplier}
-              id="id_products"
-              type="text"
-              autoComplete="on"
-              className="inputSelect"
-              placeholder="Provedores"
-              list="suppliers"
-              required
-            /> 
-            <datalist  id="suppliers">
-              {suppliersSelect.length === 0 ? (
-                <option>No hay proveedores</option>) : (
-                suppliersSelect.map((val, key) => (
-                  <option key={key} value={val.name}>
-                    {val.name}
-                  </option>
-                ))
-              )}
-            </datalist>
-        </div>
-        {msg && (
-          <p
-            className={`text-center w-full mx-auto text-sm rounded-sm ${msg.includes("éxito") ? `text-green-800 bg-green-200`:`text-red-800 bg-red-200`} `}
-            role="alert"
-          >
-            {msg}
-          </p>
-        )}
-        <div className="">
-            <button type="button" className="button" onClick={() => {addDelivery();}}>Registrar</button>
-        </div>
-        
-        </form>
+      </form>
     </Dashboard>
   );
-};
+}

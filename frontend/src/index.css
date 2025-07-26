@@ -1,16 +1,39 @@
 @import "tailwindcss";
-
+/* Oculta el icono del picker pero mantén la funcionalidad */
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
-  display: none;
-  -webkit-appearance: none;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
 }
+
+/* Para Firefox */
+input[type="date"]::-moz-calendar-picker-indicator,
+input[type="time"]::-moz-calendar-picker-indicator {
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  right: 0;
+  cursor: pointer;
+}
+
+/* Mantén tus estilos actuales para los inputs */
 input[type="date"],
 input[type="time"] {
   appearance: none;
   -moz-appearance: textfield;
+  -webkit-appearance: none;
 }
 
+/* Asegura que el contenedor tenga posición relativa */
+.input-icon-wrapper {
+  position: relative;
+}
 .poppins-regular {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
