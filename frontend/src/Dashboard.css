@@ -263,20 +263,29 @@
   padding: 0.5rem 1rem;
   font-size: 0.875rem;
 }
-
+/* Estilos para el buscador */
 .search-container {
-  width: 100%;
-  max-width: 300px;
+  position: relative;
+  min-width: 250px;
 }
 
-/* Buscador mejorado */
-.search-input {
+.search-container input {
   padding-left: 2.5rem !important;
-  padding-right: 1rem !important;
-  padding-top: 0.5rem !important;
-  padding-bottom: 0.5rem !important;
+  padding-right: 1.5rem !important;
+  padding-top: 0.625rem !important;
+  padding-bottom: 0.625rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.search-container input:focus {
+  box-shadow: 0 0 0 3px rgba(126, 58, 242, 0.2) !important;
 }
 
 .search-icon {
-  left: 0.75rem !important;
+  position: absolute;
+  left: 1rem !important;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #7b2cbf;
+  z-index: 10;
 }
