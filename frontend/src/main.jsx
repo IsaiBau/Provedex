@@ -1,8 +1,8 @@
-
-import axios from 'axios';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import './index.css'
+import MyStyledCalendar from '../src/assets/Calendar.jsx'
 import React from 'react';
-import './index.css';
-import { createRoot } from 'react-dom/client';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import App from './App';
@@ -10,7 +10,6 @@ import { store } from './app/store';
 import './index.css';
 import ScrollToTop from './features/ScrollToTop';
 import Dashboard from './Dashboard.jsx'
-axios.defaults.withCredentials = true;
 
 const container = document.getElementById('root');
 const root = createRoot(container);

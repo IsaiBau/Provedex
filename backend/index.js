@@ -6,6 +6,8 @@ import db from "./config/Database.js";
 // import UserRoute from "./routes/UserRoute.js"
 import ProductRoute from "./routes/ProductRoute.js"
 import SupplierRoute from "./routes/SupplierRoute.js"
+// import ProductRoute from "./routes/ProductRoute.js"
+import DeliveryRoute from "./routes/DeliveryRoute.js";
 import TestRoute from "./routes/TestRoute.js"
 //MODELOS DE LA BD
 import Categories from "./models/CategoryModel.js";
@@ -44,6 +46,7 @@ app.use(express.json())
 app.use(ProductRoute);
 app.use(SupplierRoute);
 app.use(TestRoute);
+// app.user(ProductRoute);
 app.use(DeliveryRoute);
 
 
