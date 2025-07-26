@@ -182,3 +182,101 @@
     padding: 15px;
   }
 }
+
+/* Estilos específicos para la tabla */
+.card .content-container {
+  padding: 2rem;
+}
+
+/* Estilos para botones */
+.button-primary {
+  padding: 0.625rem 1.5rem !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  transition: all 0.2s ease !important;
+}
+
+.button-primary:hover {
+  transform: translateY(-1px) !important;
+}
+
+/* Estilos para los badges de estado */
+.status-badge {
+  padding: 0.375rem 0.75rem !important;
+  border-radius: 5px !important;
+  font-weight: 600 !important;
+  align-items: center !important;
+  line-height: 1 !important;
+}
+
+/* Asegurar que la tabla tenga buen espaciado */
+.table-container {
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+}
+
+.table-container table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-container thead th {
+  position: sticky;
+  top: 0;
+  background-color: #F3E8FF;
+  z-index: 10;
+  text-align: center !important;
+  vertical-align: middle;
+  padding: 1rem;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #5d11ae;
+}
+
+.table-container tbody td {
+  padding: 1rem;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid #F3E8FF;
+}
+
+.table-actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+.table-header-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 0.5rem 0;
+}
+
+.btn-add {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+.search-container {
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Buscador mejorado */
+.search-input {
+  padding-left: 2.5rem !important;
+  padding-right: 1rem !important;
+  padding-top: 0.5rem !important;
+  padding-bottom: 0.5rem !important;
+}
+
+.search-icon {
+  left: 0.75rem !important;
+}

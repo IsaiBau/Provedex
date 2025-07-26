@@ -4,7 +4,8 @@ import session from "express-session";
 import dotenv from "dotenv";
 import db from "./config/Database.js";
 // import UserRoute from "./routes/UserRoute.js"
-// import ProductRoute from "./routes/ProductRoute.js"
+import ProductRoute from "./routes/ProductRoute.js"
+import SupplierRoute from "./routes/SupplierRoute.js"
 import TestRoute from "./routes/TestRoute.js"
 //MODELOS DE LA BD
 import Categories from "./models/CategoryModel.js";
@@ -14,6 +15,7 @@ import Products from "./models/ProductModel.js";
 import ProductSupplier from "./models/ProductSupplierModel.js"
 import Suppliers from "./models/SupplierModel.js";
 import Users from "./models/UserModel.js";
+import DeliveryRoute from "./routes/DeliveryRoute.js";
 dotenv.config();
 
 const app = express();
@@ -33,14 +35,17 @@ app.use(session({
 
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000'
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'file-name', 'file-size']
 }))
-
-// app.use(UserRoute);
-// app.user(ProductRoute);
-app.use(TestRoute);
-
 app.use(express.json())
+// app.use(UserRoute);
+app.use(ProductRoute);
+app.use(SupplierRoute);
+app.use(TestRoute);
+app.use(DeliveryRoute);
+
 
 app.listen(process.env.APP_PORT, ()=>{
     console.log('Server encendido...')
