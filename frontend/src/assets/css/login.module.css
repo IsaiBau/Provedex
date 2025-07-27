@@ -1,0 +1,114 @@
+.container {
+  margin: 0 auto;
+  padding: 2rem;
+  max-width: 24rem;
+  width: 100%;
+}
+
+.logo {
+  margin: 0 auto;
+  height: 2.5rem;
+  width: auto;
+}
+
+.title {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.form {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.inputGroup {
+  width: 100%;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.input {
+  display: block;
+  width: 100%;
+  border-radius: 0.375rem;
+  background-color: white;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  color: #111827;
+  border: 1px solid #d1d5db;
+}
+
+.input:focus {
+  outline: 2px solid #4f46e5;
+  outline-offset: 2px;
+}
+
+.button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  border-radius: 0.375rem;
+  background-color: #7b2cbf;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  background-color: #59189a;
+}
+
+.link {
+  font-weight: 600;
+  color: #4f46e5;
+}
+
+.link:hover {
+  color: #4338ca;
+}
+
+.footer {
+  margin-top: 2.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  color: #6b7280;
+}
+
+.errorMessage {
+  color: #dc3545; /* Rojo para errores */
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  padding: 0.25rem 0.5rem;
+  background-color: #f8d7da;
+  border-radius: 0.25rem;
+  border: 1px solid #f5c6cb;
+}
+
+.button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Asegúrate que el contenedor del input tenga espacio para el mensaje */
+.inputGroup {
+  margin-bottom: 1rem;
+}

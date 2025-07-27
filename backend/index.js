@@ -3,11 +3,12 @@ import cors from "cors";
 import session from "express-session";
 import dotenv from "dotenv";
 import db from "./config/Database.js";
-// import UserRoute from "./routes/UserRoute.js"
-import ProductRoute from "./routes/ProductRoute.js"
-import SupplierRoute from "./routes/SupplierRoute.js"
+import AuthRoute from "./routes/AuthRoute.js";
+import ProductRoute from "./routes/ProductRoute.js";
+import SupplierRoute from "./routes/SupplierRoute.js";
 import DeliveryRoute from "./routes/DeliveryRoute.js";
-import TestRoute from "./routes/TestRoute.js"
+import TestRoute from "./routes/TestRoute.js";
+import UserRoute from "./routes/UserRoute.js";
 //MODELOS DE LA BD
 import Categories from "./models/CategoryModel.js";
 import DeliveryHistories from "./models/DeliveryHistoryModel.js";
@@ -41,13 +42,12 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization', 'file-name', 'file-size']
 }))
 app.use(express.json())
-// app.use(UserRoute);
+app.use(UserRoute);
 app.use(ProductRoute);
 app.use(SupplierRoute);
 app.use(TestRoute);
-// app.user(ProductRoute);
 app.use(DeliveryRoute);
-
+app.use(AuthRoute);
 
 app.listen(process.env.APP_PORT, ()=>{
     console.log('Server encendido...')

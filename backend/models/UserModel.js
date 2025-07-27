@@ -22,6 +22,14 @@ const Users = db.define('users', {
     rol: {
         type: DataTypes.STRING(50),
         allowNull: false
+    },
+    password: {
+        type: DataTypes.STRING,
+        defaultValue: DataTypes.UUIDV4,
+        allowNull: false,
+        validate: {
+            notEmpty: true,
+        }
     }
 },{
     freezeTableName: true

@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Entregas from "./views/Entregas";
 import DeliveryTable from "./views/DeliveryTable";
 import Calendar from "./views/Calendar";
+import Login from "./views/Login";
 
 function App() {
 
@@ -12,6 +13,7 @@ function App() {
           <Route path="/entregas/:uuid" element={<Entregas/>}/>
           <Route path="/delivery" element={<DeliveryTable/>}/>
           <Route path="/calendar" element={<Calendar/>}/>
+          <Route path="/" element={<Login/>}/>
         </Routes>
 
     </div>

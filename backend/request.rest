@@ -9,6 +9,16 @@ Content-Type: application/json
     "product_id":1,
     "supplier_id":5
 }
+###
+//Login del administrador
+POST http://localhost:5000/login
+Content-Type: application/json
+
+{
+    "name": "Admin Principal",
+    "password": "123456"
+}
+
 /*1970-01-01T13:00:00.000Z
 GET http://localhost:5000/deliveries/ee88b3ae-5d5e-441e-b460-2b330b64f6aa
 
