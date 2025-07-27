@@ -136,3 +136,28 @@ export const deleteDelivery = async(req, res) =>{
         res.status(500).json({msg: error.message})
     }
 }
+
+export const updateDeliveryStatus = async(req, res) => {
+    try {
+        const delivery = await Delivery.findOne({
+            where: {
+                uuid: req.params.uuid
+            }
+        });
+        
+        if(!delivery) return res.status(404).json({msg: "No se encontró la entrega"});
+        
+        const { status } = req.body;
+        if(!['Pending', 'Canceled', 'Rescheduled', 'Completed'].includes(status)) {
+            return res.status(400).json({msg: "Estado no válido"});
+        }
+
+        await Delivery.update({ status }, {
+            where: { uuid: delivery.uuid }
+        });
+
+        res.status(200).json({ msg: "Estado actualizado" });
+    } catch (error) {
+        res.status(500).json({ msg: error.message });
+    }
+}

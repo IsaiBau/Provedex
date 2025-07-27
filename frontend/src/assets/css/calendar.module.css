@@ -1,0 +1,294 @@
+/* Archivo calendar.module.css */
+
+/* Contenedor principal - mantiene las 3 columnas */
+.calendarContainer {
+  display: flex;
+  height: 100vh; /* Cambiamos a viewport completo */
+  width: 100%;
+  overflow: hidden; /* Evita scroll general */
+}
+
+/* Barra lateral izquierda */
+.sidebarLeft {
+  width: 220px;
+  background-color: #59189a; 
+  color: white;
+  padding: 1.5rem 1rem;
+}
+
+.yearSelector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.yearSelector button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.25rem;
+}
+
+.yearSelector button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.yearTitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.monthList {
+  list-style: none;
+}
+
+.monthItem {
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.25rem;
+  cursor: pointer;
+  border-radius: 0.25rem;
+  transition: all 0.2s;
+}
+
+.monthItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.monthItem.active {
+  background-color: rgba(255, 255, 255, 0.15);
+  font-weight: bold;
+}
+
+/* Calendario principal */
+.calendarMain {
+  flex: 1;
+  padding: 1.5rem;
+  background-color: #f8fafc; /* bg-gray-50 */
+}
+
+/* Sobreescritura de react-big-calendar */
+.rbc-calendar {
+  height: 100% !important;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.rbc-header {
+  padding: 0.75rem 0 !important;
+  font-weight: 600;
+}
+
+.rbc-month-view {
+  border: none !important;
+}
+
+.rbc-month-row {
+  min-height: 100px !important;
+}
+
+.rbc-date-cell {
+  padding: 0.5rem !important;
+}
+
+.rbc-off-range-bg {
+  background-color: #f9fafb !important;
+}
+
+.rbc-today {
+  background-color: #f0f9ff !important;
+}
+
+/* Barra lateral derecha */
+.sidebarRight {
+  width: 320px;
+  background-color: white;
+  padding: 1.5rem;
+  box-shadow: -1px 0 3px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+}
+
+.eventsTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.eventCard {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-left: 4px solid #3b82f6;
+  transition: all 0.2s;
+}
+
+.eventCard:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.eventHeader {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.eventDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 0.75rem;
+}
+
+.eventDate {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.eventTime {
+  font-size: 0.875rem;
+  color: #64748b;
+  margin-bottom: 0.75rem;
+}
+
+.eventTitle {
+  font-weight: 500;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.eventDetail {
+  font-size: 0.875rem;
+  color: #475569;
+  margin-bottom: 0.5rem;
+}
+
+.eventDetail strong {
+  color: #1e293b;
+}
+
+.eventActions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.eventButton {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 0.875rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.hideButton {
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  background: none;
+}
+
+.hideButton:hover {
+  background-color: #ef4444;
+  color: white;
+}
+
+.editButton {
+  border: 1px solid #eab308;
+  color: #eab308;
+  background: none;
+}
+
+.editButton:hover {
+  background-color: #eab308;
+  color: white;
+}
+
+/* Estados de carga */
+.loadingState,
+.errorState {
+  padding: 1rem;
+  text-align: center;
+}
+
+.errorState {
+  color: #ef4444;
+}
+/*modal*/
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #59189a;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.modalContent h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.statusSelect {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.modalButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.modalButtons button {
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.modalButtons button:first-child {
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.modalButtons button:last-child {
+  background-color: #7b2acc;
+  color: white;
+  border: none;
+}
+
+.modalButtons button:last-child:hover {
+  background-color: #59189a;
+}

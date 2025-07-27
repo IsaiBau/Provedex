@@ -70,7 +70,20 @@ export default function DeliveryTable() {
   const handleEditDelivery = (uuid) => {
     navigate(`/entregas/${uuid}`);
   };
-
+const traducirEstado = (estado) => {
+  switch (estado) {
+    case "Pending":
+      return "Pendiente";
+    case "Canceled":
+      return "Cancelado";
+    case "Rescheduled":
+      return "Reprogramado";
+    case "Completed":
+      return "Completado";
+    default:
+      return "Otro";
+  }
+};
   const columns = [
     { 
         header: "Entregas", 
@@ -100,7 +113,7 @@ export default function DeliveryTable() {
             row.status === 'Rescheduled' ? 'bg-yellow-100 text-yellow-800' :
             'bg-red-100 text-red-800'
             }`}>
-            {row.status}
+            {traducirEstado(row.status)}
             </span>
         )
     },
