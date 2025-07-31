@@ -6,7 +6,7 @@ import Suppliers from "./SupplierModel.js"
 const {DataTypes} = Sequelize;
 
 const ProductSupplier = db.define('product_supplier', {
-    id_product_supplier: {
+    id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -38,17 +38,26 @@ const ProductSupplier = db.define('product_supplier', {
 }, {
     freezeTableName: true,
 });
-Products.belongsToMany(Suppliers, {
-    through: ProductSupplier,
-    foreignKey: 'product_id',
+
+// Relación Supplier -> ProductSupplier (1:N)
+Suppliers.hasMany(ProductSupplier, {
+    foreignKey: 'supplier_id'
+});
+
+ProductSupplier.belongsTo(Suppliers, {
+    foreignKey: 'supplier_id',
     onDelete: 'CASCADE', // Si eliminas producto, se borran sus relaciones
     onUpdate: 'CASCADE'
 });
+// Relación Product -> ProductSupplier (1:N)
+Products.hasMany(ProductSupplier, {
+    foreignKey: 'product_id'
+});
 
-Suppliers.belongsToMany(Products, {
-    through: ProductSupplier,
-    foreignKey: 'supplier_id',
+ProductSupplier.belongsTo(Products, {
+    foreignKey: 'product_id',
     onDelete: 'CASCADE', // Si eliminas proveedor, se borran sus relaciones
     onUpdate: 'CASCADE'
 });
+
 export default ProductSupplier;

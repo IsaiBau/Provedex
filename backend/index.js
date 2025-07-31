@@ -9,6 +9,7 @@ import SupplierRoute from "./routes/SupplierRoute.js";
 import DeliveryRoute from "./routes/DeliveryRoute.js";
 import TestRoute from "./routes/TestRoute.js";
 import UserRoute from "./routes/UserRoute.js";
+import CategoryRoute from "./routes/CategoryRoute.js";
 //MODELOS DE LA BD
 import Categories from "./models/CategoryModel.js";
 import DeliveryHistories from "./models/DeliveryHistoryModel.js";
@@ -48,6 +49,7 @@ app.use(SupplierRoute);
 app.use(TestRoute);
 app.use(DeliveryRoute);
 app.use(AuthRoute);
+app.use(CategoryRoute);
 
 app.listen(process.env.APP_PORT, ()=>{
     console.log('Server encendido...')
