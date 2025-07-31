@@ -8,7 +8,7 @@ export default function ProductsForm() {
   const { uuid } = useParams(); 
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState({ text: "", type: "" });
   
   // Estados para los datos del formulario
   const [formData, setFormData] = useState({
@@ -143,32 +143,29 @@ export default function ProductsForm() {
   };
 
   // Enviar formulario (crear o actualizar)
+  // En tu componente ProductsForm
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validar antes de enviar
     if (!validateForm()) {
-      setMsg("Por favor complete todos los campos requeridos");
+      setMsg({ text: "Por favor complete todos los campos requeridos", type: "error" });
       return;
     }
     
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:5000/deliveries/${uuid}`, formData);
-        setMsg("Entrega actualizada con éxito");
+        await axios.put(`http://localhost:5000/products/${uuid}`, formData);
+        setMsg({ text: "Producto actualizado con éxito", type: "success" });
+        setTimeout(() => navigate("/productos"), 2000); // Redirección en edición
       } else {
-        await axios.post("http://localhost:5000/deliveries", formData);
-        setMsg("Entrega creada con éxito");
-        resetForm();
+        await axios.post("http://localhost:5000/products", formData);
+        setMsg({ text: "Producto creado con éxito", type: "success" });
+        setTimeout(() => navigate("/productos"), 2000);
       }
-      
-      // Redirigir después de 2 segundos
-      setTimeout(() => navigate("/delivery"), 2000);
     } catch (error) {
-      setMsg(error.response?.data?.msg || "Error al procesar la solicitud");
+      setMsg({ text: error.response?.data?.msg || "Error al procesar la solicitud", type: "error" });
     }
   };
-
   // Resetear formulario
   const resetForm = () => {
     setFormData({
@@ -317,7 +314,15 @@ export default function ProductsForm() {
             </datalist>
             {errors.suppliers_id && <p className="text-red-500 text-xs mt-1">Seleccione un proveedor válido</p>}
           </div>
-
+          {msg.text && (
+            <div className={`mb-4 p-3 rounded-md ${
+              msg.type === "success" 
+                ? "bg-green-100 text-green-800" 
+                : "bg-red-100 text-red-800"
+            }`}>
+              {msg.text}
+            </div>
+          )}
           {/* Botón de enviar */}
           <div className={inventario["form-button-container"]}>
             <button type="submit" className="button w-full">

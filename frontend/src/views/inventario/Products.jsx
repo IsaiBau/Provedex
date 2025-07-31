@@ -36,9 +36,9 @@ const formatProducts = (products) => {
     const color = product.category?.color || '#59189a';
     // Formatear proveedores y precios
     const suppliers = product.product_suppliers.map(ps => ({
-      name: ps.supplier.name,
-      price: ps.price,
-      deliveryDays: ps.delivery_time
+      name: ps.supplier.name || "N/A",
+      price: ps.price || 0,
+      deliveryDays: ps.delivery_time || 0
     }));
     
     // Encontrar el precio más bajo
@@ -74,17 +74,21 @@ const formatProducts = (products) => {
     setTimeout(() => setMessage({ text: "", type: "" }), 3000);
   };
 
-  const deleteDelivery = async (uuid) => {
-    if (window.confirm("¿Estás seguro de eliminar esta entrega?")) {
-      try {
-        await axios.delete(`http://localhost:5000/products/${uuid}`);
-        showMessage("Entrega eliminada con éxito", "success");
-        fetchDeliveries(); // Recargar la lista después de eliminar
-      } catch (error) {
-        showMessage(error.response?.data?.msg || "Error al eliminar", "error");
-      }
+const deleteProduct = async (uuid) => {
+  if (window.confirm("¿Estás seguro de eliminar este producto?")) {
+    try {
+      const response = await axios.delete(`http://localhost:5000/products/${uuid}`);
+      showMessage(response.data.msg || "Producto eliminado con éxito", "success");
+      fetchProducts(); // Recargar la lista
+    } catch (error) {
+      console.error("Error completo:", error);
+      const errorMsg = error.response?.data?.msg || 
+                      error.message || 
+                      "Error al eliminar el producto";
+      showMessage(errorMsg, "error");
     }
-  };
+  }
+};
 
   const handleAddDelivery = () => {
     navigate("/products-form");
@@ -239,7 +243,7 @@ const formatProducts = (products) => {
 
       </button>
       <button
-        onClick={() => deleteDelivery(row.uuid)}
+        onClick={() => deleteProduct(row.uuid)}
         className="btn-add bg-red-600 hover:bg-red-700 text-white font-medium rounded transition-colors duration-200"
         title="Eliminar"
       >

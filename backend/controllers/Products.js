@@ -65,18 +65,35 @@ export const getProductById = async(req, res) =>{
 }
 
 export const createProduct = async(req, res) => {
-    const {name,stock, min_stock, max_stock, id_category} = req.body;
+    const { name, stock, min_stock, max_stock, id_category, suppliers_id } = req.body;
+    
     try {
-        await Product.create({
+        // 1. Crear el producto
+        const product = await Product.create({
             name: name,
             stock: stock,
-            min_stock:min_stock,
-            max_stock:max_stock,
-            id_category:id_category
+            min_stock: min_stock,
+            max_stock: max_stock,
+            id_category: id_category
         });
-        res.status(200).json({msg: "Producto agregado"})
+
+        // 2. Si hay proveedor, crear la relación
+        if (suppliers_id) {
+            await ProductSupplier.create({
+                product_id: product.id,
+                supplier_id: suppliers_id,
+                // Puedes agregar valores por defecto o dejarlos null
+                price: null,
+                delivery_time: null
+            });
+        }
+
+        res.status(200).json({ 
+            msg: "Producto agregado",
+            productId: product.id // Devuelve el ID para posibles usos
+        });
     } catch (error) {
-        res.status(500).json({msg: error.message})
+        res.status(500).json({ msg: error.message });
     }
 }
 
