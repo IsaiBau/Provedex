@@ -4,7 +4,7 @@ import { Op, where } from "sequelize";
 export const getCategories = async (req, res) => {
     try {
         const categories = await Categories.findAll({
-            attributes:['id','uuid','name'],
+            attributes:['id','uuid','name', 'color'],
         })
         res.status(200).json(categories)
     } catch (error) {
@@ -21,7 +21,7 @@ export const getCategoryById = async(req, res) =>{
         })
         if(!category) return res.status(404).json({msg: "No se encontró la categoría"})
         const respose = await Categories.findOne({
-                attributes:['id','uuid','name'],
+                attributes:['id','uuid','name','color'],
                 where:{
                     uuid: category.uuid
                 }
@@ -33,10 +33,11 @@ export const getCategoryById = async(req, res) =>{
 }
 
 export const createCategory = async(req, res) => {
-    const {name} = req.body;
+    const {name, color} = req.body;
     try {
         await Categories.create({
-            name: name
+            name: name,
+            color:color
         });
         res.status(200).json({msg: "Categoría agregada"})
     } catch (error) {
@@ -51,9 +52,9 @@ export const updateCategory = async(req, res) =>{
                 uuid: req.params.uuid
             }
         });
-        const {name} = req.body;
+        const {name,color} = req.body;
         if(!category) return res.status(404).json({msg: "No se encotro la categoria"})
-        await Categories.update({name},{
+        await Categories.update({name, color},{
             where:{
                 uuid: category.uuid
             }

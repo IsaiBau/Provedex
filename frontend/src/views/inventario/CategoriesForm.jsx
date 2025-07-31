@@ -11,12 +11,14 @@ export default function CategoriesForm() {
   
   // Estados para los datos del formulario
   const [formData, setFormData] = useState({
-    name: ""
+    name: "",
+    color:""
   });
   
   // Validaciones
   const [errors, setErrors] = useState({
-    name: false
+    name: false,
+    color: false
   });
 
   // Cargar datos iniciales
@@ -30,6 +32,7 @@ export default function CategoriesForm() {
           
           setFormData({
             name: categoryData.name,
+            color: categoryData.color
           });
           setIsEditing(true);
         }
@@ -44,6 +47,7 @@ export default function CategoriesForm() {
   const validateForm = () => {
     const newErrors = {
       name: !formData.name,
+      color: !formData.color
     };
     
     setErrors(newErrors);
@@ -93,11 +97,13 @@ export default function CategoriesForm() {
   // Resetear formulario
   const resetForm = () => {
     setFormData({
-      name: ""
+      name: "",
+      color: ""
     });
 
     setErrors({
-      name: false
+      name: false,
+      color: false
     });
   };
 
@@ -107,7 +113,7 @@ export default function CategoriesForm() {
         {/* Fecha de entrega */}
         <div className="mb-5"> 
           
-          <label htmlFor="delivery_date" className="label">Nombre de la categoria*</label>
+          <label htmlFor="name" className="label">Nombre de la categoria*</label>
           
           <div className={`input-icon-wrapper ${errors.name ? 'border-red-500' : ''}`}>
             <input 
@@ -116,6 +122,22 @@ export default function CategoriesForm() {
               name="name" 
               id="name" 
               type="text" 
+              className="input" 
+              required 
+            />
+          </div>
+          {errors.name && <p className="text-red-500 text-xs mt-1">Este campo es requerido</p>}
+        </div>
+        <div className="mb-5"> 
+          <label htmlFor="color" className="label">Color*</label>
+          
+          <div className={`input-icon-wrapper ${errors.name ? 'border-red-500' : ''}`}>
+            <input 
+              value={formData.color}
+              onChange={handleChange} 
+              name="color" 
+              id="color" 
+              type="color" 
               className="input" 
               required 
             />

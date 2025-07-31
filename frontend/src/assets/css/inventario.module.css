@@ -1,0 +1,54 @@
+/* inventario.module.css */
+
+/* Contenedor principal del formulario */
+.form-scroll-container {
+  max-height: calc(100vh - 200px); /* Ajusta según necesidad */
+  overflow-y: auto;
+  padding: 0 8px 20px 0; /* Espacio para scroll y margen inferior */
+}
+
+/* Contenedor del formulario */
+.form-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Menor separación entre bloques */
+  padding-bottom: 20px;
+}
+
+/* Contenedor de los inputs de stock */
+.stock-input-container {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+  align-items: center; /* Cambiado de flex-end a center */
+}
+
+
+/* Cada input de stock */
+
+.stock-input-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Inputs más pequeños */
+.stock-input-field {
+  width: 100%;
+  max-width: 120px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+
+/* Botón fijo en la parte inferior */
+.form-button-container {
+  position: sticky;
+  bottom: 0;
+  background: white;
+  padding: 15px 0;
+  margin-top: auto; /* Lo empuja hacia abajo */
+}
+.stock-label {
+  margin-bottom: 0.25rem; /* Menor espacio bajo la etiqueta */
+  font-size: 0.875rem; /* Tamaño de fuente ligeramente menor */
+}

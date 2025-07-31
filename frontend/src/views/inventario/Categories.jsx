@@ -64,6 +64,17 @@ export default function Categories() {
         )
     },
     { 
+        header: "Color", 
+        accessor: "color",
+        cell: (row) => (
+          <span
+              className="status-badge flex justify-center"
+              style={{ backgroundColor: row.color }}
+              title={row.color}
+          />  
+        )
+    },
+    { 
         header: "Acciones", 
         accessor: "acciones",
         width: "w-28"

@@ -18,6 +18,13 @@ const Categories = db.define('categories', {
         validate: {
             notEmpty: true
         }
+    },
+    color: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
     }
 }, {
     freezeTableName: true

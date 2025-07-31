@@ -1,4 +1,5 @@
 import Product from "../models/ProductModel.js";
+import Delivery from "../models/DeliveryModel.js";
 import { Op, where } from "sequelize";
 import Categories from "../models/CategoryModel.js";
 import ProductSupplier from "../models/ProductSupplierModel.js";
@@ -11,7 +12,7 @@ export const getProducts = async(req, res) => {
             include: [
                 {
                     model: Categories,
-                    attributes:['id','uuid','name']
+                    attributes:['id','uuid','name','color']
                 },
                 {
                     model: ProductSupplier,
@@ -28,32 +29,34 @@ export const getProducts = async(req, res) => {
         res.status(500).json(error)
     }
 }
-/* 
-export const getDeliveryById = async(req, res) =>{
+
+export const getProductById = async(req, res) =>{
     try {
-        const delivery = await Delivery.findOne({
+        const category = await Product.findOne({
             where:{
                 uuid: req.params.uuid
             }
         })
-        if(!delivery) return res.status(404).json({msg: "No se encontró la entrega"})
-        const respose = await Delivery.findOne({
-                attributes:['uuid','delivery_date', 'delivery_time','status', 'title', 'product_id', 'supplier_id'],
+        if(!category) return res.status(404).json({msg: "No se encontró el producto"})
+        const respose = await Product.findOne({
+                attributes:['id','uuid','name', 'stock', 'min_stock', 'max_stock', 'id_category'],
                 where:{
-                    uuid: delivery.uuid
+                    uuid: category.uuid
                 }, 
                 include: [
                     {
-                        model: Product,
-                        attributes: ['id','uuid', 'name'],
-                        as: 'product' // Usa el mismo alias que en tu relación
+                        model: Categories,
+                        attributes:['id','uuid','name','color']
                     },
                     {
-                        model: Supplier,
-                        attributes: ['id','uuid', 'name'],
-                        as: 'supplier' // Usa el mismo alias que en tu relación
+                        model: ProductSupplier,
+                        attributes: ['id','uuid','price','delivery_time', 'product_id', 'supplier_id'],
+                        include:[{
+                            model: Suppliers,
+                            attributes: ['id','uuid','name']
+                        }]
                     }
-                ],
+                ]
             })
         res.status(200).json(respose)
     } catch (error) {
@@ -61,85 +64,87 @@ export const getDeliveryById = async(req, res) =>{
     }
 }
 
-export const createDelivery = async(req, res) => {
-    const {delivery_date, delivery_time, status, title, product_id, supplier_id} = req.body;
+export const createProduct = async(req, res) => {
+    const {name,stock, min_stock, max_stock, id_category} = req.body;
     try {
-        await Delivery.create({
-            delivery_date: delivery_date,
-            delivery_time: delivery_time,
-            status:status,
-            title:title,
-            product_id:product_id,
-            supplier_id:supplier_id
+        await Product.create({
+            name: name,
+            stock: stock,
+            min_stock:min_stock,
+            max_stock:max_stock,
+            id_category:id_category
         });
-        res.status(200).json({msg: "Entrega agregada"})
+        res.status(200).json({msg: "Producto agregado"})
     } catch (error) {
         res.status(500).json({msg: error.message})
     }
 }
 
-export const updateDelivery = async(req, res) =>{
+export const updateProduct = async(req, res) =>{
     try {
-        const delivery = await Delivery.findOne({
+        const category = await Product.findOne({
             where: {
                 uuid: req.params.uuid
             }
         });
-        const {delivery_date, delivery_time, status, title, product_id, supplier_id} = req.body;
-        if(!delivery) return res.status(404).json({msg: "No se encotro la entrega"})
-        await Delivery.update({delivery_date, delivery_time, status, title, product_id, supplier_id},{
+        const {name,stock, min_stock, max_stock, id_category} = req.body;
+        if(!category) return res.status(404).json({msg: "No se encotro el producto"})
+        await Product.update({name,stock, min_stock, max_stock, id_category},{
             where:{
-                uuid: delivery.uuid
+                uuid: category.uuid
             }
         })
 
-        res.status(200).json({ msg: "Entrega actualizada" });
+        res.status(200).json({ msg: "Producto actualizado" });
     } catch (error) {
         console.log(res)
         res.status(500).json({ msg: error.message });
     }
 }
 
-export const deleteDelivery = async(req, res) =>{
+export const deleteProduct = async (req, res) => {
     try {
-        const delivery = await Delivery.findOne({
-            where:{
-                uuid: req.params.uuid
-            }
-        })
-        await Delivery.destroy({
-            where:{
-                uuid: delivery.uuid
-            }
-        })
-        res.status(200).json({msg: "Entrega eliminada con exito!"})
-    } catch (error) {
-        res.status(500).json({msg: error.message})
-    }
-}
+        const product = await Product.findOne({
+            where: { uuid: req.params.uuid },
+            include: [{ model: Delivery, as: 'deliveries' }] // Asume que tienes esta relación definida en tu modelo
+        });
 
-export const updateDeliveryStatus = async(req, res) => {
+        if (!product) {
+            return res.status(404).json({ msg: "Producto no encontrado" });
+        }
+
+        // Verifica si el producto tiene entregas asociadas
+        if (product.deliveries && product.deliveries.length > 0) {
+            return res.status(400).json({ 
+                msg: "No se puede eliminar el producto porque está asociado a entregas existentes."
+            });
+        }
+
+        // Si no hay entregas, elimina el producto
+        await Product.destroy({ where: { uuid: product.uuid } });
+        return res.status(200).json({ msg: "Producto eliminado con éxito" });
+    } catch (error) {
+        return res.status(500).json({ msg: error.message });
+    }
+};
+
+export const updateProductStock = async(req, res) => {
     try {
-        const delivery = await Delivery.findOne({
+        const product = await Product.findOne({
             where: {
                 uuid: req.params.uuid
             }
         });
         
-        if(!delivery) return res.status(404).json({msg: "No se encontró la entrega"});
+        if(!product) return res.status(404).json({msg: "No se encontró el producto"});
         
-        const { status } = req.body;
-        if(!['Pending', 'Canceled', 'Rescheduled', 'Completed'].includes(status)) {
-            return res.status(400).json({msg: "Estado no válido"});
-        }
-
-        await Delivery.update({ status }, {
-            where: { uuid: delivery.uuid }
+        const { stock } = req.body;
+        await Product.update({ stock }, {
+            where: { uuid: product.uuid }
         });
 
-        res.status(200).json({ msg: "Estado actualizado" });
+        res.status(200).json({ msg: "Stock actualizado" });
     } catch (error) {
         res.status(500).json({ msg: error.message });
     }
 }
-    */
