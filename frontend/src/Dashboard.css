@@ -266,8 +266,7 @@
 /* Asegurar que la tabla tenga buen espaciado */
 .table-container {
   max-height: calc(100vh - 250px);
-
-  overflow: visible !important; /* Permite que el tooltip se muestre fuera */
+/* Permite que el tooltip se muestre fuera */
 }
 
 .table-container table {
