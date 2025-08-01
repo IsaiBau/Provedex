@@ -343,3 +343,33 @@
   color: #7b2cbf;
   z-index: 10;
 }
+
+/* Personalización del scroll para la tabla */
+.table-container::-webkit-scrollbar {
+  width: 10px; /* Ancho del scroll vertical */
+  height: 10px; /* Altura del scroll horizontal */
+}
+
+/* Fondo del track (la "pista" del scroll) */
+.table-container::-webkit-scrollbar-track {
+  background: #f3e8ff; /* Color morado claro */
+  border-radius: 5px;
+}
+
+/* Scroll thumb (la "barra" que se mueve) */
+.table-container::-webkit-scrollbar-thumb {
+  background: #7b2cbf; /* Color morado principal */
+  border-radius: 5px;
+  border: 2px solid #f3e8ff;
+}
+
+/* Scroll thumb al pasar el mouse */
+.table-container::-webkit-scrollbar-thumb:hover {
+  background: #5b21b6; /* Color morado más oscuro */
+}
+
+/* Para Firefox */
+.table-container {
+  scrollbar-width: thin;
+  scrollbar-color: #7b2cbf #f3e8ff;
+}
