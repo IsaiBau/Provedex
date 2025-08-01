@@ -7,7 +7,7 @@ import Dashboard from "../../Dashboard.jsx";
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState({ text: "", type: "" }); // Estado unificado para mensajes
+  const [message, setMessage] = useState({ text: "", type: "" }); 
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -137,8 +137,8 @@ const deleteProduct = async (uuid) => {
         accessor: "stock",
         cell: (row) => (
             <span className={`status-badge flex justify-center ${
-            row.stock < row.minStock ? 'bg-red-100 text-red-800' :
-            row.stock > row.maxStock ? 'bg-green-100 text-green-800' :
+            row.stock < row.minStock ? 'bg-red-600 text-white' :
+            row.stock > row.maxStock ? 'bg-green-800 text-white' :
             'bg-yellow-400 text-black'
             }`}>
             {row.stock}

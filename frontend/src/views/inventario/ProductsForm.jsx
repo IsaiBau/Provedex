@@ -17,16 +17,15 @@ export default function ProductsForm() {
     max_stock: "",
     stock: "",
     id_category: "",
-    suppliers_id: ""
+    suppliers_id: [] // Cambiado a array
   });
   
   // Estados para las listas de opciones
   const [categoriesList, setCategoriesList] = useState([]);
   const [suppliersList, setSuppliersList] = useState([]);
   
-  // Estados para los valores mostrados en los inputs de datalist
+  // Estado para el valor mostrado en el input de categoría
   const [categoriesDisplay, setCategoriesDisplay] = useState("");
-  const [supplierDisplay, setSupplierDisplay] = useState("");
 
   // Validaciones
   const [errors, setErrors] = useState({
@@ -42,7 +41,7 @@ export default function ProductsForm() {
   useEffect(() => {
     const fetchInitialData = async () => {
       try {
-        // Cargar productos y proveedores
+        // Cargar categorías y proveedores
         const [categoriesRes, suppliersRes] = await Promise.all([
           axios.get("http://localhost:5000/categories"),
           axios.get("http://localhost:5000/suppliers")
@@ -51,10 +50,19 @@ export default function ProductsForm() {
         setCategoriesList(categoriesRes.data || []);
         setSuppliersList(suppliersRes.data || []);
 
-        // Si hay UUID, cargar los datos de la entrega a editar
+        // Si hay UUID, cargar los datos del producto a editar
         if (uuid) {
           const productRes = await axios.get(`http://localhost:5000/products/${uuid}`);
           const productData = productRes.data;
+          
+          console.log("Datos del producto recibidos:", productData); // Log para diagnóstico
+          
+          // Obtener los IDs de los proveedores (convertidos a string para consistencia)
+          const suppliersIds = productData.product_suppliers // Se cambio de ProductSuppliers a product_suppliers
+            ? productData.product_suppliers.map(ps => String(ps.supplier_id))
+            : [];
+          
+          console.log("IDs de proveedores a mostrar:", suppliersIds); // Log para diagnóstico
           
           setFormData({
             name: productData.name,
@@ -62,19 +70,17 @@ export default function ProductsForm() {
             max_stock: productData.max_stock,
             stock: productData.stock,
             id_category: productData.id_category,
-            suppliers_id: productData.suppliers_id // Asumiendo que es string (si es array necesitarás ajuste)
+            suppliers_id: suppliersIds 
           });
           
-          // Establecer los valores mostrados en los inputs
+          // Establecer el valor mostrado en el input de categoría
           const category = categoriesRes.data.find(c => c.id === productData.id_category);
-          const supplier = suppliersList.find(s => s.id === productData.suppliers_id);
-          
           setCategoriesDisplay(category?.name || "");
-          setSupplierDisplay(supplier?.name || "");
           
           setIsEditing(true);
         }
       } catch (error) {
+        console.error("Error al cargar datos:", error); // Log mejorado
         setMsg(error.response?.data?.msg || "Error al cargar datos");
       }
     };
@@ -83,7 +89,6 @@ export default function ProductsForm() {
   }, [uuid]);
 
   // Validar formulario
-  // Mantenemos formData como está, pero corregimos las validaciones
   const validateForm = () => {
     const newErrors = {
       name: !formData.name,
@@ -91,7 +96,7 @@ export default function ProductsForm() {
       max_stock: !formData.max_stock || formData.max_stock < formData.min_stock,
       stock: !formData.stock || formData.stock < 0,
       id_category: !formData.id_category,
-      suppliers_id: !formData.suppliers_id
+      suppliers_id: formData.suppliers_id.length === 0 // Validar que haya al menos un proveedor
     };
     
     setErrors(newErrors);
@@ -125,25 +130,30 @@ export default function ProductsForm() {
     }
   };
 
-  // Manejar cambios en los inputs de proveedor
+  // Manejar cambios en la selección múltiple de proveedores
   const handleSupplierChange = (e) => {
-    const value = e.target.value;
-    setSupplierDisplay(value);
+    const options = e.target.options;
+    const selectedSuppliers = [];
     
-    // Buscar el proveedor seleccionado
-    const selectedSupplier = suppliersList.find(item => item.name === value);
-    
-    if (selectedSupplier) {
-      setFormData(prev => ({ ...prev, suppliers_id: selectedSupplier.id }));
-      setErrors(prev => ({ ...prev, suppliers_id: false }));
-    } else {
-      setFormData(prev => ({ ...prev, suppliers_id: "" }));
-      setErrors(prev => ({ ...prev, suppliers_id: true }));
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].selected) {
+        selectedSuppliers.push(options[i].value);
+      }
     }
+    
+    setFormData(prev => ({ 
+      ...prev, 
+      suppliers_id: selectedSuppliers 
+    }));
+    
+    // Limpiar error si se selecciona al menos un proveedor
+    setErrors(prev => ({ 
+      ...prev, 
+      suppliers_id: selectedSuppliers.length === 0 
+    }));
   };
 
   // Enviar formulario (crear o actualizar)
-  // En tu componente ProductsForm
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -156,7 +166,7 @@ export default function ProductsForm() {
       if (isEditing) {
         await axios.put(`http://localhost:5000/products/${uuid}`, formData);
         setMsg({ text: "Producto actualizado con éxito", type: "success" });
-        setTimeout(() => navigate("/productos"), 2000); // Redirección en edición
+        setTimeout(() => navigate("/productos"), 2000);
       } else {
         await axios.post("http://localhost:5000/products", formData);
         setMsg({ text: "Producto creado con éxito", type: "success" });
@@ -166,23 +176,24 @@ export default function ProductsForm() {
       setMsg({ text: error.response?.data?.msg || "Error al procesar la solicitud", type: "error" });
     }
   };
+
   // Resetear formulario
   const resetForm = () => {
     setFormData({
-      delivery_date: "",
-      delivery_time: "",
-      status: "",
-      title: "",
-      product_id: "",
-      suppliers_id: ""
+      name: "",
+      min_stock: "",
+      max_stock: "",
+      stock: "",
+      id_category: "",
+      suppliers_id: []
     });
-    setProductDisplay("");
-    setSupplierDisplay("");
+    setCategoriesDisplay("");
     setErrors({
-      delivery_date: false,
-      delivery_time: false,
-      status: false,
-      product_id: false,
+      name: false,
+      min_stock: false,
+      max_stock: false,
+      stock: false,
+      id_category: false,
       suppliers_id: false
     });
   };
@@ -268,15 +279,15 @@ export default function ProductsForm() {
           </div>
 
           {/* Categoría */}
-          <div className="mb-5">
-            <label htmlFor="category" className="label">Categoría*</label>
+          <div className={inventario["form-field"]}> {/* Nueva clase añadida */}
+            <label htmlFor="category" className={inventario.label}>Categoría*</label>
             <input
               value={categoriesDisplay}
               onChange={handleCategoryChange}
               id="category"
               type="text"
               autoComplete="off"
-              className={`inputSelect ${errors.id_category ? 'border-red-500' : ''}`}
+              className={`${inventario.inputSelect} ${errors.id_category ? 'border-red-500' : ''}`}
               placeholder="Seleccione una categoría"
               list="categoriesList"
               required
@@ -288,32 +299,33 @@ export default function ProductsForm() {
                 </option>
               ))}
             </datalist>
-            {errors.id_category && <p className="text-red-500 text-xs mt-1">Seleccione una categoría válida</p>}
+            {errors.id_category && <p className={inventario["error-message"]}>Seleccione una categoría válida</p>}
           </div>
 
-          {/* Proveedor (versión temporal con datalist) */}
+          {/* Proveedor - Ahora con selección múltiple */}
           <div className="mb-5">
-            <label htmlFor="supplier" className="label">Proveedor*</label>
-            <input
-              value={supplierDisplay}
+            <label htmlFor="suppliers" className="label">Proveedor(es)*</label>
+            <select
+              multiple
+              value={formData.suppliers_id}
               onChange={handleSupplierChange}
-              id="supplier"
-              type="text"
-              autoComplete="off"
+              id="suppliers"
               className={`inputSelect ${errors.suppliers_id ? 'border-red-500' : ''}`}
-              placeholder="Seleccione un proveedor"
-              list="suppliersList"
               required
-            /> 
-            <datalist id="suppliersList">
+              size={Math.min(5, suppliersList.length)}
+            >
               {suppliersList.map((supplier) => (
-                <option key={supplier.id} value={supplier.name}>
+                <option key={supplier.id} value={String(supplier.id)}> {/* Convertir a string */}
                   {supplier.name}
                 </option>
               ))}
-            </datalist>
-            {errors.suppliers_id && <p className="text-red-500 text-xs mt-1">Seleccione un proveedor válido</p>}
+            </select>
+            <p className="text-xs text-gray-500 mt-1">
+              Mantén presionada la tecla Ctrl (Windows) o Comando (Mac) para seleccionar múltiples opciones.
+            </p>
+            {errors.suppliers_id && <p className="text-red-500 text-xs mt-1">Seleccione al menos un proveedor</p>}
           </div>
+
           {msg.text && (
             <div className={`mb-4 p-3 rounded-md ${
               msg.type === "success" 
@@ -323,6 +335,7 @@ export default function ProductsForm() {
               {msg.text}
             </div>
           )}
+          
           {/* Botón de enviar */}
           <div className={inventario["form-button-container"]}>
             <button type="submit" className="button w-full">
