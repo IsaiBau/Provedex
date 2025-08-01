@@ -12,7 +12,7 @@ export const verifyUser = async (req, res, next) => {
         });
         if (!user) return res.status(404).json({ msg: "Usuario no encontrado" });
         req.userId = user.id;
-        req.role = user.role;
+        req.rol = user.rol;
         next();
     } catch (error) {
         console.error(error);

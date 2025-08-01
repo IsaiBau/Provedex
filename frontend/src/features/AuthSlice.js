@@ -13,7 +13,7 @@ const initialState = {
 export const LoginUser = createAsyncThunk("user/LoginUser", async(user, thunkAPI) =>{
     try {
         const response = await axios.post('http://localhost:5000/login', {
-            name: user.name,
+            email: user.email,
             password: user.password
         }, {
             withCredentials: true,

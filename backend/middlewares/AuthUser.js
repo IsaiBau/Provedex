@@ -11,7 +11,7 @@ export const verifyUser = async(req, res, next)=>{
     });
     if(!user) return res.status(404).json({msg: "Usuario no encontrado"});
     req.userId = user.id;
-    req.role = user.role;
+    req.rol= user.rol;
     next();
 }
 
@@ -22,6 +22,6 @@ export const adminOnly = async(req, res, next)=>{
         }
     });
     if(!user) return res.status(404).json({msg: "Usuario no encontrado"});
-    if(user.role !== "admin") return res.status(403).json({msg: "Acceso denegado"});
+    if(user.rol !== "admin") return res.status(403).json({msg: "Acceso denegado"});
     next();
 }
