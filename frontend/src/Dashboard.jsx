@@ -1,22 +1,39 @@
+import React, { useDebugValue, useEffect, useState, useContext } from 'react';
 import "./Dashboard.css";
 import User from "/Person-1.jpg";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 import { NavLink } from "react-router-dom"
- 
+ import { getMe,LogOut, reset } from "../src/features/AuthSlice";
 const Dashboard = ({title, children}) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    dispatch(getMe());
+  }, [dispatch]);
+
+  const logout = () => {
+    dispatch(LogOut());
+    dispatch(reset());
+    navigate("/");
+  }
   return (
     <div className="dashboard">
       {/* Barra superior */}
       <header className="top-bar">
-        <div className="logo">PROVIDEX</div>
+        <div className="logo">PROVEDEX</div>
         <div className="user-profile">
           <div className="user-info">
-            <span className="username">Edgar Ortiz</span>
-            <span className="user-role">Dueño</span>
+            <span className="username">{user?.name || 'Usuario'}</span>
+            <span className="user-role">{user?.rol || 'Rol'}</span>
           </div>
           <div className="user-avatar">
             <img src={User} alt="User Avatar" className="avatar-img" />
           </div>
-          <button className="logout-btn">
+          <button onClick={logout} className="logout-btn">
             <img
               src="https://cdn-icons-png.flaticon.com/512/992/992680.png"
               alt="Logout"

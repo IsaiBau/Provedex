@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { LoginUser, reset } from "../features/authSlice";
+import { LoginUser, reset } from "../features/AuthSlice";
 import styles from "../assets/css/login.module.css";
 import Logo from "../assets/img/logo.png";
 

@@ -24,7 +24,7 @@ export const Me = async(req, res) =>{
         return res.status(401).json({msg: "Por favor inicia sesión"});
     }
     const user = await User.findOne({
-        attributes:['id','uuid', 'name', 'role', 'password'],
+        attributes:['id','uuid', 'name', 'rol', 'password'],
         where:{
             uuid: req.session.userId
         }
