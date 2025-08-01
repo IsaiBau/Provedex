@@ -231,17 +231,17 @@ const deleteProduct = async (uuid) => {
           <path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"/>
         </svg>
       </button>
+      {/*Pensaba colocarlo para editar solo stock pero al final es lo mismo, asi que queda mejor a como esta
       <button
         onClick={() => handleEditDelivery(row.uuid)}
         className="btn-add bg-yellow-400 hover:bg-yellow-500 text-white font-medium rounded transition-colors duration-200"
         title="Editar"
       >
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-  <path d="M21 16.5v-9a1 1 0 0 0-.553-.894l-8-4a1 1 0 0 0-.894 0l-8 4A1 1 0 0 0 3 7.5v9a1 1 0 0 0 .553.894l8 4a1 1 0 0 0 .894 0l8-4A1 1 0 0 0 21 16.5z"/>
-</svg>
-
-
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
+        <path d="M21 16.5v-9a1 1 0 0 0-.553-.894l-8-4a1 1 0 0 0-.894 0l-8 4A1 1 0 0 0 3 7.5v9a1 1 0 0 0 .553.894l8 4a1 1 0 0 0 .894 0l8-4A1 1 0 0 0 21 16.5z"/>
+      </svg>
       </button>
+      */}
       <button
         onClick={() => deleteProduct(row.uuid)}
         className="btn-add bg-red-600 hover:bg-red-700 text-white font-medium rounded transition-colors duration-200"

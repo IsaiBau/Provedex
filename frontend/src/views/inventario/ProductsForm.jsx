@@ -219,45 +219,42 @@ export default function ProductsForm() {
             {errors.name && <p className="text-red-500 text-xs mt-1">Este campo es requerido</p>}
           </div>
 
-          {/* Inputs de stock */}
-          <div className={inventario["stock-input-container"]}>
-            <div className={inventario["stock-input-wrapper"]}>
-              <label htmlFor="min_stock" className={`label ${inventario["stock-label"]}`}>
-                Stock mínimo*
-              </label>
-              <div className={`input-icon-wrapper ${errors.min_stock ? 'border-red-500' : ''}`}>
-                <input
-                  type="number"
-                  value={formData.min_stock}
-                  onChange={handleChange}
-                  name="min_stock"
-                  id="min_stock"
-                  className={`input ${inventario["stock-input-field"]}`}
-                  required
-                  min="0"
-                />
-              </div>
-              {errors.min_stock && <p className="text-red-500 text-xs mt-1">Valor inválido</p>}
+          {/* Inputs de stock minimo*/}
+          <div>
+            <label htmlFor="min_stock" className="label">Stock mínimo*</label>
+            <div className={`input-icon-wrapper ${errors.name ? 'border-red-500' : ''}`}>
+            <input
+              type="number"
+              value={formData.min_stock}
+              onChange={handleChange}
+              name="min_stock"
+              id="min_stock"
+              className="input" 
+              required
+              min="0"        
+            />
             </div>
+            {errors.min_stock && <p className={inventario["error-message"]}>Valor inválido</p>}
+          </div>
 
-            <div className={inventario["stock-input-wrapper"]}>
-              <label htmlFor="max_stock" className={`label ${inventario["stock-label"]}`}>
-                Stock máximo*
-              </label>
-              <div className={`input-icon-wrapper ${errors.max_stock ? 'border-red-500' : ''}`}>
-                <input
-                  type="number"
-                  value={formData.max_stock}
-                  onChange={handleChange}
-                  name="max_stock"
-                  id="max_stock"
-                  className={`input ${inventario["stock-input-field"]}`}
-                  required
-                  min={formData.min_stock || 0}
-                />
-              </div>
-              {errors.max_stock && <p className="text-red-500 text-xs mt-1">Debe ser mayor al stock mínimo</p>}
+          {/* Inputs de stock maximo*/}
+          <div>
+            <label htmlFor="max_stock" className="label">
+              Stock máximo*
+            </label>
+            <div className={`input-icon-wrapper ${errors.name ? 'border-red-500' : ''}`}>
+              <input
+                type="number"
+                value={formData.max_stock}
+                onChange={handleChange}
+                name="max_stock"
+                id="max_stock"
+                className="input"
+                required
+                min={formData.min_stock || 0}
+              />
             </div>
+            {errors.max_stock && <p className={inventario["error-message"]}>Debe ser mayor al stock mínimo</p>}
           </div>
 
           {/* Stock actual */}
@@ -279,7 +276,7 @@ export default function ProductsForm() {
           </div>
 
           {/* Categoría */}
-          <div className={inventario["form-field"]}> {/* Nueva clase añadida */}
+          <div className={inventario["input-container"]}>
             <label htmlFor="category" className={inventario.label}>Categoría*</label>
             <input
               value={categoriesDisplay}
@@ -287,11 +284,10 @@ export default function ProductsForm() {
               id="category"
               type="text"
               autoComplete="off"
-              className={`${inventario.inputSelect} ${errors.id_category ? 'border-red-500' : ''}`}
+              className="input"
               placeholder="Seleccione una categoría"
               list="categoriesList"
-              required
-            />
+              required/>
             <datalist id="categoriesList">
               {categoriesList.map((category) => (
                 <option key={category.id} value={category.name}>
@@ -302,28 +298,42 @@ export default function ProductsForm() {
             {errors.id_category && <p className={inventario["error-message"]}>Seleccione una categoría válida</p>}
           </div>
 
-          {/* Proveedor - Ahora con selección múltiple */}
+          {/* Proveedores */}
           <div className="mb-5">
-            <label htmlFor="suppliers" className="label">Proveedor(es)*</label>
+            <label htmlFor="suppliers" className={inventario.label}>
+              Proveedor(es)*
+            </label>
             <select
               multiple
               value={formData.suppliers_id}
               onChange={handleSupplierChange}
               id="suppliers"
-              className={`inputSelect ${errors.suppliers_id ? 'border-red-500' : ''}`}
+              className={`border rounded-md focus:ring-2 focus:ring-yellow-400 focus:border-yellow-400 ${
+                errors.suppliers_id ? 'border-red-500' : 'border-gray-300'
+              }`}
               required
               size={Math.min(5, suppliersList.length)}
+              style={{
+                minHeight: '120px',
+                scrollbarColor: '#f59e0b #fef3c7'
+              }}
             >
               {suppliersList.map((supplier) => (
-                <option key={supplier.id} value={String(supplier.id)}> {/* Convertir a string */}
+                <option 
+                  key={supplier.id} 
+                  value={String(supplier.id)}
+                  className="p-2 hover:bg-amber-100"
+                >
                   {supplier.name}
                 </option>
               ))}
             </select>
-            <p className="text-xs text-gray-500 mt-1">
-              Mantén presionada la tecla Ctrl (Windows) o Comando (Mac) para seleccionar múltiples opciones.
+            <p className="mt-2 text-xs text-gray-500">
+              Mantén presionada la tecla Ctrl (Windows) para seleccionar múltiples opciones.
             </p>
-            {errors.suppliers_id && <p className="text-red-500 text-xs mt-1">Seleccione al menos un proveedor</p>}
+            {errors.suppliers_id && (
+              <p className="mt-1 text-xs text-red-600">Seleccione al menos un proveedor</p>
+            )}
           </div>
 
           {msg.text && (
