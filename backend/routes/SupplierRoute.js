@@ -1,14 +1,18 @@
-import express from "express"
-import{
-    getSuppliers,
-} from "../controllers/Supplier.js"
+import express from "express";
+import {
+  getSuppliers,
+  getSupplierById,
+  createSupplier,
+  updateSupplier,
+  deleteSupplier
+} from "../controllers/SupplierController.js";
 
 const router = express.Router();
 
-router.get('/suppliers', getSuppliers)
-//router.get('/suppliers/:id', getUserById)
-//router.post('/suppliers', createUser)
-//router.patch('/suppliers/:id', updateUser)
-//router.delete('/suppliers/:id', deleteUser)
+router.get("/suppliers", getSuppliers);
+router.get("/suppliers/:uuid", getSupplierById);
+router.post("/suppliers", createSupplier);
+router.patch("/suppliers/:uuid", updateSupplier);
+router.delete("/suppliers/:uuid", deleteSupplier);
 
 export default router;

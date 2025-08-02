@@ -7,6 +7,8 @@ import CategoriesForm from "./views/inventario/CategoriesForm";
 import Categories from "./views/inventario/Categories";
 import Products from "./views/inventario/Products";
 import ProductsForm from "./views/inventario/ProductsForm";
+import Supplier from "./views/Supplier/Supplier";
+import SuppliersForm from "./views/Supplier/SupplierForm";
 import RecoveryPassword from "./views/RecoveryPassword";
 import Profile from "./views/Profile";
 
@@ -29,6 +31,11 @@ function App() {
           <Route path="/productos" element={<Products/>}/>
           <Route path="/products-form" element={<ProductsForm/>}/>
           <Route path="/products-form/:uuid" element={<ProductsForm/>}/>
+          {/* Proveedores */}
+          <Route path="/proveedores" element={<Supplier/>}/>
+          <Route path="/proveedores/form" element={<SuppliersForm />} />
+          <Route path="/proveedores/form/:uuid" element={<SuppliersForm />} />
+
         </Routes>
 
     </div>
