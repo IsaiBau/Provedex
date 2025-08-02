@@ -4,7 +4,7 @@ import User from "/Person-1.jpg";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from "react-router-dom"
- import { getMe,LogOut, reset } from "../src/features/AuthSlice";
+import { getMe,LogOut, reset } from "../src/features/AuthSlice";
 const Dashboard = ({title, children}) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,8 +27,8 @@ const Dashboard = ({title, children}) => {
         <div className="logo">PROVEDEX</div>
         <div className="user-profile">
           <div className="user-info">
-            <span className="username">{user?.name || 'Usuario'}</span>
-            <span className="user-role">{user?.rol || 'Rol'}</span>
+            <span className="username"><NavLink to={"/profile"}>{user?.name || 'Usuario'}</NavLink></span>
+            <span className="user-role"><NavLink  to={"/profile"}>{user?.rol || 'Rol'}</NavLink></span>
           </div>
           <div className="user-avatar">
             <img src={User} alt="User Avatar" className="avatar-img" />

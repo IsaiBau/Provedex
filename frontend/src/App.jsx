@@ -8,6 +8,7 @@ import Categories from "./views/inventario/Categories";
 import Products from "./views/inventario/Products";
 import ProductsForm from "./views/inventario/ProductsForm";
 import RecoveryPassword from "./views/RecoveryPassword";
+import Profile from "./views/Profile";
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/calendar" element={<Calendar/>}/>
           <Route path="/" element={<Login/>}/>
           <Route path="/recovery-password" element={<RecoveryPassword/>}/>
+          <Route path="/profile" element={<Profile/>}/>
           {/* Inventario */}
           <Route path="/categories" element={<Categories/>}/>
           <Route path="/categories-form" element={<CategoriesForm/>}/>
