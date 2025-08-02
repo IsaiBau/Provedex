@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { LoginUser, reset } from "../features/AuthSlice";
 import styles from "../assets/css/login.module.css";
 import Logo from "../assets/img/logo.png";
-
+import { NavLink } from "react-router-dom"
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -84,6 +84,9 @@ const Login = () => {
           >
             {isLoading ? 'Cargando...' : 'Iniciar sesión'}
           </button>
+          <p>
+            ¿Olvidaste tu contraseña? <NavLink className={"text-blue-700"} to={"/recovery-password"}>Recuperala aquí</NavLink>
+          </p>
         </form>
       </div>
     </div>
