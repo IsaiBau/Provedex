@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { LoginUser, reset } from "../features/authSlice";
+import { LoginUser, reset } from "../features/AuthSlice";
 import styles from "../assets/css/login.module.css";
 import Logo from "../assets/img/logo.png";
-
+import { NavLink } from "react-router-dom"
 const Login = () => {
-  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -23,9 +23,11 @@ const Login = () => {
 
   const Auth = (e) => {
     e.preventDefault();
-    dispatch(LoginUser({ name, password }));
+    if (!email || !password) {
+      return; 
+    }
+    dispatch(LoginUser({ email, password }));
   };
-
   return (
     <div className={styles.container}>
       <div>
@@ -36,17 +38,18 @@ const Login = () => {
       <div className={styles.formContainer}>
         <form className={styles.form} onSubmit={Auth}>
           <div className={styles.inputGroup}>
-            <label htmlFor="name" className={styles.label}>
-              Nombre de usuario
+            <label htmlFor="email" className={styles.label}>
+              Correo electrónico
             </label>
             <input
-              id="name"
-              type="text"  // Cambiado de "name" a "text"
-              name="name"
+              id="email"
+              type="email"  
+              name="email"
               required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className={styles.input}
+              placeholder="email@email.com"
             />
           </div>
 
@@ -81,6 +84,9 @@ const Login = () => {
           >
             {isLoading ? 'Cargando...' : 'Iniciar sesión'}
           </button>
+          <p>
+            ¿Olvidaste tu contraseña? <NavLink className={"text-blue-700"} to={"/recovery-password"}>Recuperala aquí</NavLink>
+          </p>
         </form>
       </div>
     </div>
