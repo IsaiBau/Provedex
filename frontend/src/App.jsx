@@ -11,6 +11,7 @@ import Supplier from "./views/Supplier/Supplier";
 import SuppliersForm from "./views/Supplier/SupplierForm";
 import RecoveryPassword from "./views/RecoveryPassword";
 import Profile from "./views/Profile";
+import PriceSuppliers from "./views/inventario/PriceSuppliers";
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
           <Route path="/recovery-password" element={<RecoveryPassword/>}/>
           <Route path="/profile" element={<Profile/>}/>
           {/* Inventario */}
+          <Route path="/suppliers-price/:uuid" element={<PriceSuppliers/>}/>
           <Route path="/categories" element={<Categories/>}/>
           <Route path="/categories-form" element={<CategoriesForm/>}/>
           <Route path="/categories-form/:uuid" element={<CategoriesForm/>}/>

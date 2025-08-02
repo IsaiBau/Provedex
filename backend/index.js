@@ -11,6 +11,7 @@ import TestRoute from "./routes/TestRoute.js";
 import UserRoute from "./routes/UserRoute.js";
 import CategoryRoute from "./routes/CategoryRoute.js";
 import RecoveryPassRoute from "./routes/RecoveryPassRoute.js";
+import ProductSupplerRoute from "./routes/ProductSuplierRoute.js";
 //MODELOS DE LA BD
 import Categories from "./models/CategoryModel.js";
 import DeliveryHistories from "./models/DeliveryHistoryModel.js";
@@ -52,6 +53,7 @@ app.use(DeliveryRoute);
 app.use(AuthRoute);
 app.use(CategoryRoute);
 app.use(RecoveryPassRoute);
+app.use(ProductSupplerRoute);
 
 app.listen(process.env.APP_PORT, ()=>{
     console.log('Server encendido...')

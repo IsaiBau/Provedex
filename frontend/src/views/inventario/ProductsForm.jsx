@@ -166,7 +166,7 @@ export default function ProductsForm() {
       if (isEditing) {
         await axios.put(`http://localhost:5000/products/${uuid}`, formData);
         setMsg({ text: "Producto actualizado con éxito", type: "success" });
-        setTimeout(() => navigate("/productos"), 2000);
+        setTimeout(() => navigate(-1), 2000);
       } else {
         await axios.post("http://localhost:5000/products", formData);
         setMsg({ text: "Producto creado con éxito", type: "success" });

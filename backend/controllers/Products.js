@@ -7,23 +7,42 @@ import Categories from "../models/CategoryModel.js";
 import ProductSupplier from "../models/ProductSupplierModel.js";
 import Suppliers from "../models/SupplierModel.js";
 
-// Función auxiliar para manejar relaciones con proveedores
 const handleProductSuppliers = async (productId, suppliersIds) => {
-  // Eliminar relaciones existentes
-  await ProductSupplier.destroy({
+  // Obtener todas las relaciones actuales
+  const currentRelations = await ProductSupplier.findAll({
     where: { product_id: productId }
   });
 
-  // Crear nuevas relaciones
-  if (suppliersIds && suppliersIds.length > 0) {
-    const suppliersRelations = suppliersIds.map(supplierId => ({
-      product_id: productId,
-      supplier_id: supplierId,
-      price: null, // Puedes establecer valores por defecto o pedirlos en el formulario
-      delivery_time: null
-    }));
+  // Convertir a array de números los IDs de proveedores
+  const currentSupplierIds = currentRelations.map(r => r.supplier_id);
+  const newSupplierIds = suppliersIds.map(id => Number(id)); // Asegurar que son números
 
-    await ProductSupplier.bulkCreate(suppliersRelations);
+  // Encontrar proveedores a agregar (que no existen actualmente)
+  const suppliersToAdd = newSupplierIds.filter(
+    supplierId => !currentSupplierIds.includes(supplierId)
+  );
+
+  // Encontrar proveedores a eliminar (que no están en los nuevos IDs)
+  const suppliersToRemove = currentRelations.filter(
+    relation => !newSupplierIds.includes(relation.supplier_id)
+  ).map(r => r.id);
+
+  // Realizar las operaciones necesarias
+  if (suppliersToRemove.length > 0) {
+    await ProductSupplier.destroy({
+      where: { id: suppliersToRemove }
+    });
+  }
+
+  if (suppliersToAdd.length > 0) {
+    await ProductSupplier.bulkCreate(
+      suppliersToAdd.map(supplierId => ({
+        product_id: productId,
+        supplier_id: supplierId,
+        price: null,
+        delivery_time: null
+      })
+    ))
   }
 };
 
@@ -114,35 +133,33 @@ export const createProduct = async(req, res) => {
     }
 }
 
-export const updateProduct = async(req, res) =>{
-    try {
-        const product = await Product.findOne({
-            where: {
-                uuid: req.params.uuid
-            }
-        });
-        
-        if(!product) return res.status(404).json({msg: "No se encontró el producto"});
-        
-        const {name, stock, min_stock, max_stock, id_category, suppliers_id} = req.body;
-        
-        // 1. Actualizar los datos básicos del producto
-        await Product.update(
-            {name, stock, min_stock, max_stock, id_category},
-            { where: { uuid: product.uuid } }
-        );
+export const updateProduct = async(req, res) => {
+  try {
+    const product = await Product.findOne({
+      where: { uuid: req.params.uuid }
+    });
+    
+    if(!product) return res.status(404).json({msg: "Producto no encontrado"});
+    
+    const {name, stock, min_stock, max_stock, id_category, suppliers_id = []} = req.body;
+    
+    // Actualizar datos básicos
+    await Product.update(
+      {name, stock, min_stock, max_stock, id_category},
+      { where: { uuid: product.uuid } }
+    );
 
-        // 2. Actualizar las relaciones con proveedores
-        if (suppliers_id) {
-            await handleProductSuppliers(product.id, suppliers_id);
-        }
+    // Actualizar relaciones con proveedores
+    await handleProductSuppliers(product.id, suppliers_id);
 
-        res.status(200).json({ msg: "Producto actualizado con éxito" });
-    } catch (error) {
-        res.status(500).json({ msg: error.message });
-    }
+    res.status(200).json({ msg: "Producto actualizado con éxito" });
+  } catch (error) {
+    res.status(500).json({ 
+      msg: "Error al actualizar el producto",
+      error: error.message 
+    });
+  }
 }
-
 export const deleteProduct = async (req, res) => {
     try {
         const product = await Product.findOne({
