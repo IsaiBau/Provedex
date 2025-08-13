@@ -1,7 +1,7 @@
 import Delivery from "../models/DeliveryModel.js";
 import Product from "../models/ProductModel.js";
 import Supplier from "../models/SupplierModel.js";
-import { Op, where } from "sequelize";
+import { Op, Sequelize, where } from "sequelize";
 
 export const getDeliveries = async (req, res) => {
     try {
@@ -22,7 +22,13 @@ export const getDeliveries = async (req, res) => {
         
         const deliveries = await Delivery.findAll({
             where: whereClause,
-            attributes: ['uuid', 'delivery_date', 'delivery_time', 'status', 'title'],
+            attributes: [
+                'uuid', 'delivery_date', 'delivery_time', 'status', 'title',  
+                [
+                    Sequelize.fn('CONVERT', Sequelize.literal('VARCHAR(10)'), Sequelize.col('delivery_date'), 23),
+                    'formatted_date'
+                ],
+            ],
             include: [
                 {
                     model: Product,
@@ -36,8 +42,8 @@ export const getDeliveries = async (req, res) => {
                 }
             ],
             order: [
-                ['delivery_date', 'ASC'],
-                ['delivery_time', 'ASC']
+                ['delivery_date', 'DESC'],
+                ['delivery_time', 'DESC']
             ]
         });
         
@@ -57,7 +63,13 @@ export const getDeliveryById = async(req, res) =>{
         })
         if(!delivery) return res.status(404).json({msg: "No se encontró la entrega"})
         const respose = await Delivery.findOne({
-                attributes:['uuid','delivery_date', 'delivery_time','status', 'title', 'product_id', 'supplier_id'],
+                attributes:[
+                    'uuid','delivery_date', 'delivery_time','status', 'title', 'product_id', 'supplier_id',
+                    [
+                        Sequelize.fn('CONVERT', Sequelize.literal('VARCHAR(10)'), Sequelize.col('delivery_date'), 23),
+                        'formatted_date'
+                    ],
+                ],
                 where:{
                     uuid: delivery.uuid
                 }, 

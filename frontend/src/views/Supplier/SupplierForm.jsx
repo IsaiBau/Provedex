@@ -8,6 +8,7 @@ export default function SuppliersForm() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [msg, setMsg] = useState("");
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -25,7 +26,7 @@ export default function SuppliersForm() {
     const fetchInitialData = async () => {
       try {
         if (uuid) {
-          const res = await axios.get(`http://localhost:5000/suppliers/${uuid}`);
+          const res = await axios.get(`${apiUrl}/suppliers/${uuid}`);
           const data = res.data;
           setFormData({
             name: data.name,
@@ -66,10 +67,10 @@ export default function SuppliersForm() {
 
     try {
       if (isEditing) {
-        await axios.patch(`http://localhost:5000/suppliers/${uuid}`, formData);
+        await axios.patch(`${apiUrl}/suppliers/${uuid}`, formData);
         setMsg("Proveedor actualizado con éxito");
       } else {
-        await axios.post("http://localhost:5000/suppliers", formData);
+        await axios.post(`${apiUrl}/suppliers`, formData);
         setMsg("Proveedor registrado con éxito");
         resetForm();
       }

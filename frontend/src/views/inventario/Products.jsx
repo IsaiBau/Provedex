@@ -9,14 +9,15 @@ export default function Products() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" }); 
   const navigate = useNavigate();
-  
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     fetchProducts();
   }, []);
 
   const fetchProducts = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/products');
+      const response = await axios.get(`${apiUrl}/products`);
       if (!Array.isArray(response.data)) {
         throw new Error("La respuesta de la API no es un array válido");
       }
@@ -77,7 +78,7 @@ const formatProducts = (products) => {
 const deleteProduct = async (uuid) => {
   if (window.confirm("¿Estás seguro de eliminar este producto?")) {
     try {
-      const response = await axios.delete(`http://localhost:5000/products/${uuid}`);
+      const response = await axios.delete(`${apiUrl}/products/${uuid}`);
       showMessage(response.data.msg || "Producto eliminado con éxito", "success");
       fetchProducts(); // Recargar la lista
     } catch (error) {

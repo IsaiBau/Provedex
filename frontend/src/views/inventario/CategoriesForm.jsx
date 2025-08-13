@@ -8,7 +8,7 @@ export default function CategoriesForm() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [msg, setMsg] = useState("");
-  
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   // Estados para los datos del formulario
   const [formData, setFormData] = useState({
     name: "",
@@ -27,7 +27,7 @@ export default function CategoriesForm() {
       try {
         // Si hay UUID, cargar los datos de la entrega a editar
         if (uuid) {
-          const categoryRes = await axios.get(`http://localhost:5000/categories/${uuid}`);
+          const categoryRes = await axios.get(`${apiUrl}/categories/${uuid}`);
           const categoryData = categoryRes.data;
           
           setFormData({
@@ -79,10 +79,10 @@ export default function CategoriesForm() {
     
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:5000/categories/${uuid}`, formData);
+        await axios.put(`${apiUrl}/categories/${uuid}`, formData);
         setMsg("Categoría actualizada con éxito");
       } else {
-        await axios.post("http://localhost:5000/categories", formData);
+        await axios.post(`${apiUrl}/categories`, formData);
         setMsg("Categoría creada con éxito");
         resetForm();
       }

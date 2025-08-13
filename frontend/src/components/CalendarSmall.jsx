@@ -17,10 +17,10 @@ const CalendarSmall = () => {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const fetchDeliveries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/deliveries');
+      const response = await axios.get(`${apiUrl}/deliveries`);
       const deliveryEvents = transformDeliveriesToEvents(response.data || []);
       setEvents(deliveryEvents);
     } catch (err) {

@@ -8,6 +8,7 @@ export default function Entregas() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [msg, setMsg] = useState("");
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   
   // Estados para los datos del formulario
   const [formData, setFormData] = useState({
@@ -42,8 +43,8 @@ export default function Entregas() {
       try {
         // Cargar productos y proveedores
         const [productsRes, suppliersRes] = await Promise.all([
-          axios.get("http://localhost:5000/products"),
-          axios.get("http://localhost:5000/suppliers")
+          axios.get(`${apiUrl}/products`),
+          axios.get(`${apiUrl}/suppliers`)
         ]);
         
         setProductsList(productsRes.data || []);
@@ -51,11 +52,11 @@ export default function Entregas() {
 
         // Si hay UUID, cargar los datos de la entrega a editar
         if (uuid) {
-          const deliveryRes = await axios.get(`http://localhost:5000/deliveries/${uuid}`);
+          const deliveryRes = await axios.get(`${apiUrl}/deliveries/${uuid}`);
           const deliveryData = deliveryRes.data;
           
           setFormData({
-            delivery_date: deliveryData.delivery_date,
+            delivery_date: deliveryData.formatted_date || deliveryData.delivery_date,
             delivery_time: deliveryData.delivery_time.split('T')[1].substring(0, 5),
             status: deliveryData.status,
             title: deliveryData.title || "",
@@ -153,10 +154,10 @@ export default function Entregas() {
     
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:5000/deliveries/${uuid}`, formData);
+        await axios.put(`${apiUrl}/deliveries/${uuid}`, formData);
         setMsg("Entrega actualizada con éxito");
       } else {
-        await axios.post("http://localhost:5000/deliveries", formData);
+        await axios.post(`${apiUrl}/deliveries`, formData);
         setMsg("Entrega creada con éxito");
         resetForm();
       }

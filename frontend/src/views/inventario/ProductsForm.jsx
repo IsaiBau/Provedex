@@ -9,7 +9,8 @@ export default function ProductsForm() {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [msg, setMsg] = useState({ text: "", type: "" });
-  
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   // Estados para los datos del formulario
   const [formData, setFormData] = useState({
     name: "",
@@ -43,8 +44,8 @@ export default function ProductsForm() {
       try {
         // Cargar categorías y proveedores
         const [categoriesRes, suppliersRes] = await Promise.all([
-          axios.get("http://localhost:5000/categories"),
-          axios.get("http://localhost:5000/suppliers")
+          axios.get(`${apiUrl}/categories`),
+          axios.get(`${apiUrl}/suppliers`)
         ]);
         
         setCategoriesList(categoriesRes.data || []);
@@ -52,7 +53,7 @@ export default function ProductsForm() {
 
         // Si hay UUID, cargar los datos del producto a editar
         if (uuid) {
-          const productRes = await axios.get(`http://localhost:5000/products/${uuid}`);
+          const productRes = await axios.get(`${apiUrl}/products/${uuid}`);
           const productData = productRes.data;
           
           console.log("Datos del producto recibidos:", productData); // Log para diagnóstico
@@ -164,11 +165,11 @@ export default function ProductsForm() {
     
     try {
       if (isEditing) {
-        await axios.put(`http://localhost:5000/products/${uuid}`, formData);
+        await axios.put(`${apiUrl}/products/${uuid}`, formData);
         setMsg({ text: "Producto actualizado con éxito", type: "success" });
         setTimeout(() => navigate(-1), 2000);
       } else {
-        await axios.post("http://localhost:5000/products", formData);
+        await axios.post(`${apiUrl}/products`, formData);
         setMsg({ text: "Producto creado con éxito", type: "success" });
         setTimeout(() => navigate("/productos"), 2000);
       }

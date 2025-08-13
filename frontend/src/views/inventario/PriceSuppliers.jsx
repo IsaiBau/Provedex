@@ -12,12 +12,13 @@ export default function PriceSuppliers() {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [editData, setEditData] = useState({});
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   // Cargar y formatear datos del producto
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/products/${uuid}`);
+        const response = await axios.get(`${apiUrl}/products/${uuid}`);
         console.log("Datos completos:", response.data);
         
         setProductInfo({
@@ -93,7 +94,7 @@ export default function PriceSuppliers() {
       }
 
       await axios.patch(
-        `http://localhost:5000/products-supplier/${supplierUuid}/stock`, 
+        `${apiUrl}/products-supplier/${supplierUuid}/stock`, 
         dataToSave
       );
       
@@ -127,7 +128,7 @@ export default function PriceSuppliers() {
     if (window.confirm("¿Estás seguro de quitar este proveedor del producto?")) {
       try {
         await axios.delete(
-          `http://localhost:5000/products-supplier/${supplierUuid}`
+          `${apiUrl}/products-supplier/${supplierUuid}`
         );
         
         setSuppliersData(prev => prev.filter(ps => ps.uuid !== supplierUuid));

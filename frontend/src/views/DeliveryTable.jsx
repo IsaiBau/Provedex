@@ -9,14 +9,15 @@ export default function DeliveryTable() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" }); // Estado unificado para mensajes
   const navigate = useNavigate();
-  
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
   useEffect(() => {
     fetchDeliveries();
   }, []);
 
   const fetchDeliveries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/deliveries');
+      const response = await axios.get(`${apiUrl}/deliveries`);
       if (!Array.isArray(response.data)) {
         throw new Error("La respuesta de la API no es un array válido");
       }
@@ -31,9 +32,10 @@ export default function DeliveryTable() {
 
   const formatDeliveries = (deliveries) => {
     return deliveries.map(delivery => {
-      const timePart = delivery.delivery_time.split('T')[1].substring(0, 8);
-      const fechaHora = `${delivery.delivery_date} ${timePart}`;
-      
+      const fecha = delivery.formatted_date || delivery.delivery_date;
+      const hora = delivery.delivery_time.split('T')[1].substring(0, 8);
+      const fechaHora = `${fecha} ${hora}`;
+
       const descripcion = delivery.title || `Entrega de ${delivery.product?.name || 'producto'}`;
       
       return {
@@ -54,7 +56,7 @@ export default function DeliveryTable() {
   const deleteDelivery = async (uuid) => {
     if (window.confirm("¿Estás seguro de eliminar esta entrega?")) {
       try {
-        await axios.delete(`http://localhost:5000/deliveries/${uuid}`);
+        await axios.delete(`${apiUrl}/deliveries/${uuid}`);
         showMessage("Entrega eliminada con éxito", "success");
         fetchDeliveries(); // Recargar la lista después de eliminar
       } catch (error) {

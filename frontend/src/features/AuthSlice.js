@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
 const initialState = {
     user: null,
@@ -12,7 +13,7 @@ const initialState = {
 // Funcion para loguear al usuario
 export const LoginUser = createAsyncThunk("user/LoginUser", async(user, thunkAPI) =>{
     try {
-        const response = await axios.post('http://localhost:5000/login', {
+        const response = await axios.post(`${apiUrl}/login`, {
             email: user.email,
             password: user.password
         }, {
@@ -33,7 +34,7 @@ export const LoginUser = createAsyncThunk("user/LoginUser", async(user, thunkAPI
 // Funcion que obtiene los datos del usuario que esta logueado
 export const getMe = createAsyncThunk("user/getMe", async(_, thunkAPI) =>{
     try {
-        const response = await axios.get('http://localhost:5000/me', {
+        const response = await axios.get(`${apiUrl}/me`, {
             withCredentials: true
         });
         return response.data
@@ -47,7 +48,7 @@ export const getMe = createAsyncThunk("user/getMe", async(_, thunkAPI) =>{
 
 // Funcion que destruye la sesion del usuario, cerrar sesion
 export const LogOut = createAsyncThunk("user/LogOut", async() => {
-    await axios.delete('http://localhost:5000/logout', {
+    await axios.delete(`${apiUrl}/logout`, {
         withCredentials: true
     });
 });

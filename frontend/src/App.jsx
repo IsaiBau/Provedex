@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Entregas from "./views/Entregas";
 import DeliveryTable from "./views/DeliveryTable";
@@ -14,6 +15,14 @@ import Profile from "./views/Profile";
 import PriceSuppliers from "./views/inventario/PriceSuppliers";
 
 function App() {
+ useEffect(() => {
+    if ('serviceWorker' in navigator) {
+      console.log("Intentando registrar SW...");
+      navigator.serviceWorker.register('/sw.js')
+        .then(reg => console.log('SW registrado:', reg))
+        .catch(err => console.error('Error al registrar SW:', err));
+    }
+  }, []);
 
   return (
     <div>

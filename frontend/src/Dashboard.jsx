@@ -20,6 +20,39 @@ const Dashboard = ({title, children}) => {
     dispatch(reset());
     navigate("/");
   }
+  const menuOptions = {
+    Admin: [
+      { path: "/categories", label: "Categorías de productos" },
+      { path: "/productos", label: "Productos" },
+      { path: "/proveedores", label: "Proveedores" },
+      { path: "/delivery", label: "Entregas" },
+      { path: "/calendar", label: "Calendario" },
+    ],
+    inventario: [
+      { path: "/categories", label: "Categorías de productos" },
+      { path: "/productos", label: "Productos" },
+      { path: "/delivery", label: "Entregas" },
+      { path: "/calendar", label: "Calendario" }
+    ],
+    cajero: [
+      { path: "/proveedores", label: "Proveedores" },
+      { path: "/delivery", label: "Entregas" },
+      { path: "/calendar", label: "Calendario" }
+    ],
+    default: [
+      { path: "/categories", label: "Categorías de productos" },
+      { path: "/productos", label: "Productos" },
+      { path: "/proveedores", label: "Proveedores" },
+      { path: "/delivery", label: "Entregas" },
+      { path: "/calendar", label: "Calendario" },
+    ]
+  };
+
+  const getMenuOptions = () => {
+    if (!user?.rol) return menuOptions.default;
+    return menuOptions[user.rol.toLowerCase()] || menuOptions.default;
+  };
+
   return (
     <div className="dashboard">
       {/* Barra superior */}
@@ -49,11 +82,16 @@ const Dashboard = ({title, children}) => {
         <aside className="sidebar">
           <nav>
             <ul className="menu">
-              <li className="menu-item"><NavLink to={"/categories"}>Categorias de productos</NavLink></li>
-              <li className="menu-item"><NavLink to={"/productos"}>Productos</NavLink></li>
-              <li className="menu-item"><NavLink to={"/proveedores"}>Proveedores</NavLink></li>
-              <li className="menu-item"><NavLink to={"/delivery"}>Entregas</NavLink></li>
-              <li className="menu-item"><NavLink to={"/calendar"}>Calendario</NavLink></li>
+              {getMenuOptions().map((option, index) => (
+                <li key={index} className="menu-item">
+                  <NavLink 
+                    to={option.path}
+                    className={({ isActive }) => isActive ? "active" : ""}
+                  >
+                    {option.label}
+                  </NavLink>
+                </li>
+              ))}
             </ul>
           </nav>
         </aside>

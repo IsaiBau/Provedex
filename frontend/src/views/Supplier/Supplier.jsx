@@ -9,6 +9,7 @@ export default function SuppliersTable() {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState({ text: "", type: "" });
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
 
   useEffect(() => {
     fetchSuppliers();
@@ -16,7 +17,7 @@ export default function SuppliersTable() {
 
   const fetchSuppliers = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/suppliers");
+      const response = await axios.get(`${apiUrl}/suppliers`);
       if (!Array.isArray(response.data)) {
         throw new Error("La respuesta de la API no es un array válido");
       }
@@ -36,7 +37,7 @@ export default function SuppliersTable() {
   const deleteSupplier = async (uuid) => {
     if (window.confirm("¿Estás seguro de eliminar este proveedor?")) {
       try {
-        await axios.delete(`http://localhost:5000/suppliers/${uuid}`);
+        await axios.delete(`${apiUrl}/suppliers/${uuid}`);
         showMessage("Proveedor eliminado con éxito", "success");
         fetchSuppliers();
       } catch (error) {

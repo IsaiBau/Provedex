@@ -57,11 +57,12 @@ const MyStyledCalendar = () => {
   const [editingEvent, setEditingEvent] = useState(null);
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState('');
-  
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
+
    // Función para obtener entregas desde tu API
   const fetchDeliveries = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/deliveries');
+      const response = await axios.get(`${apiUrl}/deliveries`);
       if (!Array.isArray(response.data)) {
         throw new Error("La respuesta de la API no es un array válido");
       }
@@ -138,7 +139,7 @@ const transformDeliveriesToEvents = (deliveries) => {
 
     try {
       const response = await axios.patch(
-        `http://localhost:5000/deliveries/${editingEvent.id}/status`, 
+        `${apiUrl}/deliveries/${editingEvent.id}/status`, 
         { status: selectedStatus }
       );
 

@@ -10,24 +10,75 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const { user, isError, isSuccess, isLoading, message } = useSelector(
     (state) => state.auth
   );
 
   useEffect(() => {
     if (user || isSuccess) {
-      navigate("/entregas");
-    }
+      Notification.requestPermission().then(permission => {
+      if (permission === "granted") {
+        userNotification();
+      } else {
+        console.warn("Permiso de notificación denegado");
+      }
+    });
+    sendEmailReminder();
+    navigate("/delivery");
+  }
     dispatch(reset());
   }, [user, isSuccess, dispatch, navigate]);
 
-  const Auth = (e) => {
+  const Auth = async (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      return; 
-    }
-    dispatch(LoginUser({ email, password }));
+    if (!email || !password) return; 
+    
+    await dispatch(LoginUser({ email, password }));
   };
+
+  //para susvribir al usuario
+  async function userNotification() {
+    const registration = await navigator.serviceWorker.ready;
+    console.log("Service Worker listo:", registration);
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY)
+    });
+    console.log("Enviando suscripción:", subscription);
+    const res = await fetch(`${apiUrl}/subscribe`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(subscription)
+    });
+
+  const result = await res.json();
+    console.log("Respuesta del backend:", result);
+        console.log("Suscripción enviada");
+      }
+
+  function urlBase64ToUint8Array(base64String) {
+    const padding = "=".repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
+    const rawData = window.atob(base64);
+    return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+  }
+
+  async function sendEmailReminder() {
+    try {
+      const response = await fetch(`${apiUrl}/send-reminders`, {
+        method: 'POST',
+        credentials: 'include'
+      });
+      
+      if (!response.ok) throw new Error("Error al enviar recordatorios");
+      
+      const data = await response.json();
+      console.log("Recordatorios enviados:", data);
+    } catch (error) {
+      console.error("Error al enviar recordatorios:", error);
+    }
+  }
   return (
     <div className={styles.container}>
       <div>

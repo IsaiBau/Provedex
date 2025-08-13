@@ -14,12 +14,12 @@ const RecoveryPassword = () => {
   const [message, setMessage] = useState({ text: "", type: "" });
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   const handleSendCode = async (e) => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/enviar-codigo', { email });
+      const response = await axios.post(`${apiUrl}/enviar-codigo`, { email });
       setMessage({ text: response.data.msg, type: "success" });
       setStep(2);
     } catch (error) {
@@ -36,7 +36,7 @@ const RecoveryPassword = () => {
     e.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/verificar-codigo', { 
+      const response = await axios.post(`${apiUrl}/verificar-codigo`, { 
         email, 
         codigo: code 
       });
@@ -62,7 +62,7 @@ const RecoveryPassword = () => {
     
     setIsLoading(true);
     try {
-      const response = await axios.patch('http://localhost:5000/actualizar-password', {
+      const response = await axios.patch(`${apiUrl}/actualizar-password`, {
         email,
         codigo: code,
         newPassword

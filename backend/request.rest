@@ -24,3 +24,21 @@ GET http://localhost:5000/deliveries/ee88b3ae-5d5e-441e-b460-2b330b64f6aa
 
 DELETE http://localhost:5000/deliveries/f1af3a0e-e2a7-435d-89c5-a4d7924153dc
 Content-Type: application/json*/
+
+###  
+//Probar notificaciones
+POST https://localhost:5000/subscribe
+Content-Type: application/json
+
+{
+  "endpoint": "https://fcm.googleapis.com/fcm/send/fake-endpoint-id",
+  "keys": {
+    "p256dh": "fakeP255dhKey",
+    "auth": "fakeAutgKey"
+  }
+}
+
+###  
+//Probar notificaciones mNUlwa
+POST https://localhost:5000/test-push
+Content-Type: application/json

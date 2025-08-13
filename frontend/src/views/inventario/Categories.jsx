@@ -7,8 +7,9 @@ import Dashboard from "../../Dashboard.jsx";
 export default function Categories() {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState({ text: "", type: "" }); // Estado unificado para mensajes
+  const [message, setMessage] = useState({ text: "", type: "" });
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_BASE_URL;
   
   useEffect(() => {
     fetchCategories();
@@ -16,7 +17,7 @@ export default function Categories() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/categories');
+      const response = await axios.get(`${apiUrl}/categories`);
       if (!Array.isArray(response.data)) {
         throw new Error("La respuesta de la API no es un array válido");
       }
@@ -36,7 +37,7 @@ export default function Categories() {
   const deleteDelivery = async (uuid) => {
     if (window.confirm("¿Estás seguro de eliminar esta entrega?")) {
       try {
-        await axios.delete(`http://localhost:5000/categories/${uuid}`);
+        await axios.delete(`${apiUrl}/categories/${uuid}`);
         showMessage("Entrega eliminada con éxito", "success");
         fetchCategories(); // Recargar la lista después de eliminar
       } catch (error) {
